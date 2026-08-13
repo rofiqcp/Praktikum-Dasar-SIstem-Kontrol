@@ -1,84 +1,104 @@
-# Pertemuan 5 — Autonics TK4S/T4RN + Pemanas Air, Pengambilan Data Manual
+# Pertemuan 5 — Autonics Temperature Controller: Pengamatan Manual dan Analisis Respon
 
-## 1. Tujuan
-Mahasiswa mengoperasikan controller temperatur Autonics pada plant pemanas air, membandingkan ON/OFF hysteresis dan PID/time-proportional, serta merekam respon menggunakan stopwatch dan Excel.
+## Capaian pembelajaran
+Mahasiswa mampu membaca PV dan SV, menjelaskan ON/OFF, hysteresis, dan PID secara konseptual, membuat eksperimen yang dapat direproduksi, merekam data dengan stopwatch, serta menganalisis respon temperatur menggunakan Excel, Python, dan MATLAB.
 
-## 2. PV, SV, MV
-- **PV**: suhu aktual.
-- **SV**: setpoint.
-- **MV**: manipulated variable/control output.
+## Alur pembelajaran
+P1–P4 menggunakan model dan simulasi. P5 mulai menggunakan data dari trainer temperatur laboratorium. Fokus utama P5 adalah kualitas eksperimen dan kualitas data.
 
-Pada ON/OFF, MV pada dasarnya 0/100%. Pada PID dengan output relay/SSR, MV diterjemahkan menjadi rasio ON/OFF dalam satu window waktu.
+## Istilah penting
+- **PV**: nilai proses yang terukur.
+- **SV**: nilai target.
+- **Error**: selisih SV dan PV.
+- **Hysteresis**: jarak ambang pada kontrol ON/OFF.
+- **PID**: kombinasi aksi proportional, integral, dan derivative.
 
-## 3. ON/OFF hysteresis
-Controller menghindari chatter dengan dua ambang.
+## ON/OFF dan hysteresis
+Mode ON/OFF menghasilkan respon yang berosilasi di sekitar target. Hysteresis mencegah perubahan keadaan yang terlalu sering akibat variasi kecil pada PV. Mahasiswa membandingkan beberapa nilai hysteresis dan menjelaskan trade-off antara lebar ripple dan frekuensi perubahan output.
 
-Untuk heating sederhana:
-- PV cukup di bawah SV → output ON;
-- PV melewati batas atas → OFF.
+## PID
+Secara konsep:
 
-Hysteresis kecil menjaga PV dekat SV tetapi switching lebih sering. Hysteresis besar switching lebih jarang tetapi ripple temperatur lebih besar.
+`u(t)=Kp e(t)+Ki integral(e)dt+Kd de(t)/dt`
 
-## 4. PID/time-proportional
-PID menghasilkan output persentase. Contoh window 10 s:
-- MV 70% → ON 7 s, OFF 3 s;
-- MV 20% → ON 2 s, OFF 8 s.
+P merespons error saat ini, I mengakumulasi error, dan D merespons laju perubahan. Analisis tidak hanya berdasarkan bentuk grafik, tetapi juga rise time, overshoot, settling time, dan steady-state error.
 
-## 5. Eksperimen pemanas air
-Gunakan setpoint yang aman untuk trainer, contoh 40–50°C sesuai instruksi laboratorium. Jangan memaksakan setpoint melebihi rating plant.
+## Experimental fairness
+Setiap run harus mencatat kondisi awal. Metadata minimum:
 
-## 6. Pengambilan data manual
-Satu operator melihat stopwatch, satu operator membaca PV. Interval contoh 10 s.
+| Item | Dicatat |
+|---|---|
+| ID run | ya |
+| mode | ya |
+| SV | ya |
+| PV awal | ya |
+| volume/kondisi plant | ya |
+| interval pencatatan | ya |
+| parameter controller | ya |
+| posisi sensor | ya |
+| catatan gangguan | ya |
 
-Kolom:
-- nomor;
-- waktu;
-- SV;
-- PV;
-- error;
-- status output/keterangan.
+Jangan membandingkan dua run sebelum memeriksa bahwa kondisi awalnya cukup setara.
 
-Gunakan `templates/template_pengamatan_pemanas_air.xlsx` atau CSV.
+## Pengambilan data manual
+Gunakan stopwatch dan template. Format minimum:
 
-## 7. Uji hysteresis
-Lakukan minimal tiga variasi hysteresis. Semua kondisi lain dijaga semirip mungkin:
-- volume air;
-- suhu awal;
-- heater;
-- posisi sensor;
-- setpoint.
+`time_s,setpoint_C,temperature_C,output_state,notes`
 
-## 8. Uji PID
-Tuning dilakukan bertahap:
-1. tentukan P;
-2. tambah I;
-3. tambah D bila diperlukan.
-
-Jangan membandingkan run dengan kondisi awal yang sangat berbeda tanpa mencatatnya.
-
-## 9. Analisis
-Gunakan `examples/analyze_manual_data.py`.
-
-Output:
-- grafik PV/SP;
-- CSV ringkasan;
-- delay/rise/peak/settling/overshoot/steady-state error bila data memenuhi definisi.
-
-## 10. Keselamatan
-Pemanas air dan listrik harus mengikuti `../SAFETY.md`. Untuk praktikum mahasiswa gunakan plant low-voltage/terisolasi bila memungkinkan.
-
-## Program referensi dan urutan belajar
-Topik inti pertemuan ini adalah **Autonics pemanas air manual**. Program yang harus dibuka dan dipahami:
+File yang tersedia:
 - `templates/template_manual.csv`
+- `templates/template_pengamatan.csv`
 - `templates/template_pengamatan_pemanas_air.xlsx`
-- `examples/analyze_manual_data.py`
 
-Urutan kerja yang direkomendasikan: pahami persamaan/diagram → jalankan contoh default → ubah satu parameter → catat output → jelaskan sebab perubahan → simpan bukti.
+Raw data disimpan apa adanya. Jika dibutuhkan data bersih, buat salinan baru dan dokumentasikan perubahan.
 
-## Hasil yang diharapkan
-Tabel stopwatch lengkap, grafik PV-SV dan metrik respons tersedia.
+## Eksperimen wajib
+1. Ambil satu baseline.
+2. Bandingkan minimal tiga variasi hysteresis.
+3. Ambil data konfigurasi PID yang ditentukan pengajar.
+4. Ulangi satu konfigurasi untuk melihat repeatability.
+5. Bandingkan semua run menggunakan tabel parameter dan metrics.
 
-## Validasi dan troubleshooting
-Jangan mengubah volume air/daya heater di tengah perbandingan. Catat kondisi awal dan interval stopwatch.
+## Metrics respon
+Analisis minimal:
+- rise time;
+- peak value dan peak time;
+- overshoot;
+- settling time;
+- steady-state error.
 
-Setiap hasil eksperimen harus mencatat konfigurasi, satuan, sample time/interval akuisisi, dan kondisi awal. Hasil yang “terlihat bagus” tetapi tidak dapat direproduksi belum dianggap valid.
+Sampling manual mempunyai resolusi terbatas. Peak yang terjadi di antara dua waktu pencatatan dapat tidak terukur. P6 akan membandingkannya dengan logging digital.
+
+## Analisis Python
+
+`python examples/analyze_manual_response.py data_run.csv`
+
+Untuk beberapa run:
+
+`python examples/compare_manual_runs.py run1.csv run2.csv run3.csv`
+
+## Analisis MATLAB
+
+`run('examples/analyze_manual_response.m')`
+
+## Troubleshooting data
+- Header CSV harus konsisten.
+- Waktu harus naik secara monoton.
+- PV dan SV harus numerik dan memiliki satuan yang jelas.
+- Catat data kosong atau pencatatan terlambat, jangan menyembunyikannya.
+- Jika data antar-run sangat berbeda, audit kembali kondisi awal dan metadata.
+
+## Keselamatan
+Gunakan hanya trainer laboratorium yang telah disiapkan dan diperiksa. Mahasiswa tidak melakukan perubahan pada instalasi daya. Jika pembacaan tidak wajar atau kondisi alat tidak sesuai SOP, pengambilan data dihentikan dan dilaporkan kepada pengajar/teknisi.
+
+## File wajib P5
+- `Materi.md`
+- `Jobsheet.md`
+- `TugasVideo.md`
+- `templates/template_pengamatan_pemanas_air.xlsx`
+- `examples/analyze_manual_response.py`
+- `examples/analyze_manual_response.m`
+- `examples/compare_manual_runs.py`
+
+## Jembatan ke P6
+Dataset P5 adalah baseline manual. Pada P6 data yang sama jenisnya dikumpulkan dengan DAQMaster sehingga mahasiswa dapat membandingkan resolusi waktu, jumlah sampel, peak, settling time, dan potensi kesalahan pencatatan manual.
