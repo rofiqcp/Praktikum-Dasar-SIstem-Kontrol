@@ -1,5 +1,20 @@
 # Changelog branch v1
 
+## Final readiness audit
+- Melakukan audit ulang P1–P16 pada branch `v1`.
+- Memperketat `validate_repo.py`: struktur modul, minimum kelengkapan dokumen, program wajib, referensi source pada Markdown, marker protocol, Python syntax, dan readiness marker firmware.
+- GitHub Actions sekarang menjalankan quadrature test P10.
+- GitHub Actions sekarang mengompilasi sketch Arduino Mega P10, P11, dan P12 dengan PlatformIO CI.
+- Build PlatformIO P13, P14, dan P15 tetap menjadi regression gate.
+- Memperbaiki P11 ZERO agar count, `lastCount`, buffer RPM, LPF, dan state PID di-reset bersama sehingga tidak muncul RPM palsu setelah perubahan reference.
+- Memperbaiki P12 ZERO agar perubahan reference selalu dilakukan dalam state berhenti.
+- Memperbaiki P13 ZERO agar estimator RPM ikut di-reset bersama encoder count.
+- Memperbaiki P15 ZERO/mode transition agar histori estimator speed tidak terbawa ke reference baru.
+- Memperluas P13 `Materi.md` dan `Jobsheet.md` menjadi modul PlatformIO/ADC/encoder/filter/AI yang lebih lengkap.
+- Memperluas P16 `Materi.md` dan `Jobsheet.md` menjadi final responsi dan acceptance workflow P9–P15.
+- Menambahkan `READINESS_V1.md` sebagai catatan status validasi repository, batas automated testing, dan kriteria branch siap digunakan.
+- Audit sebelumnya juga telah menyelaraskan model Simulink P9/P11/P12 terhadap model P3, memperbaiki P12 offline simulation, memperkeras analyzer data, dan menutup legacy workflow P11.
+
 ## Complete lab-ready pass
 - Memperluas seluruh P1–P16 menjadi jalur belajar yang konsisten dengan materi/jobsheet/tugas atau project.
 - Mengganti plant temperatur menjadi **pemanas air**.
@@ -18,4 +33,4 @@
 - Menambahkan dokumentasi installation, wiring, safety, testing, serial protocol, troubleshooting, Simulink generation dan repository validator/CI.
 
 ## Hardware safety
-Mains/heater power side tidak dirancang untuk breadboard. Praktikum awal wajib memakai pemanas DC low-voltage atau trainer mains yang sudah dilindungi enclosure/fuse/RCD dan ditangani personel kompeten.
+Sisi daya trainer mengikuti desain dan prosedur laboratorium. Dokumentasi repository berfokus pada kontrol, firmware, data, dan integrasi software; pemeriksaan kesiapan fisik tetap wajib dilakukan oleh instruktur/teknisi sebelum sesi mahasiswa.
