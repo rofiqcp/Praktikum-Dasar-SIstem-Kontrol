@@ -1,5 +1,7 @@
 # Jobsheet Pertemuan 11
 
+> Analisis kuantitatif, tabel P/PI/PID, audit saturation, filter, dan perbandingan dua arah dijelaskan lebih lengkap di `ANALISIS_DATA.md`.
+
 ## 1. Verifikasi P10
 RPM + dan - harus benar.
 
@@ -26,7 +28,7 @@ Script mengirim:
 Uji STOP saat motor berputar. Kedua PWM harus nol.
 
 ## Analisis
-Grafik SP, RPM, error, P/I/D, PID PWM. Hitung response metrics untuk step positif dan negatif secara terpisah.
+Grafik SP, RPM, error, P/I/D, PID PWM. Hitung response metrics untuk step positif dan negatif secara terpisah. Lengkapi tabel dan pertanyaan pada `ANALISIS_DATA.md`.
 
 ## Bukti yang harus dikumpulkan
 - screenshot/terminal bahwa program utama benar-benar dijalankan;
