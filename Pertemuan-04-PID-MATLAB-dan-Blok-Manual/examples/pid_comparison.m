@@ -1,9 +1,11 @@
-clear; clc; close all; s=tf('s'); G=0.8/(45*s+1);
-controllers={2, 2+0.05/s, 2+0.05/s+5*s/(0.5*s+1)};
-names={'P','PI','PID filtered-D'};
-figure; hold on; grid on;
+clear; clc; close all; s=tf('s');
+G=0.8/(120*s+1);
+controllers={pid(2,0,0), pid(2,0.03,0), pid(2,0.03,8)};
+names={'P','PI','PID'};
+figure; hold on;
 for i=1:numel(controllers)
-    T=feedback(controllers{i}*G,1); [y,t]=step(T,200); plot(t,60*y,'DisplayName',names{i});
-    fprintf('\n%s\n',names{i}); disp(stepinfo(y,t,1));
+    T=feedback(controllers{i}*G,1);
+    [y,t]=step(T,600); plot(t,y,'DisplayName',names{i});
+    fprintf('%s\n',names{i}); disp(stepinfo(y,t,1));
 end
-xlabel('s'); ylabel('Scaled output'); legend;
+grid on; legend; xlabel('s'); ylabel('normalized temperature');

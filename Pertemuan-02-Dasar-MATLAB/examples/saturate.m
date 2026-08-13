@@ -1,3 +1,4 @@
-function y = saturate(u, umin, umax)
-y = min(max(u, umin), umax);
+function y=saturate(x,lo,hi)
+%SATURATE Limit x between lo and hi.
+y=min(max(x,lo),hi);
 end

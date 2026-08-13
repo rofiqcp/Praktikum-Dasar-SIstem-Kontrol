@@ -1,34 +1,26 @@
-# Pertemuan 02 — Dasar-Dasar MATLAB dan Simulink
-
-## Capaian Pembelajaran
-- menggunakan script/function MATLAB
-- melakukan operasi vector dan matrix
-- membuat plot
-- mengenal block dasar Simulink
-
-## Materi Inti
-
-Fokus pertemuan ini adalah dasar MATLAB sebelum masuk ke model plant. Topik: Command Window, Workspace, script `.m`, function, scalar/vector/matrix, indexing, operator elemen `.* ./ .^`, plotting, `linspace`, `zeros`, loop dan conditional, serta dasar penggunaan Control System Toolbox.
-
-Mahasiswa juga mengenal Simulink sebagai lingkungan block diagram: Sources, Sinks, Math Operations, Mux/Demux/Bus, Switch, Logic, Subsystem, MATLAB Function dan penggunaan m-file untuk inisialisasi parameter.
+# Pertemuan 02 — Dasar-Dasar MATLAB
 
 
-## Program yang Wajib Dijalankan
-- `examples/matlab_basics.m`
-- `examples/saturate.m`
+## Capaian
+Mahasiswa dapat memakai Command Window, Workspace, Editor, script `.m`, function, vector/matrix, indexing, operator element-wise, plotting, loop, conditional, dan membaca/menyimpan data.
 
-## Alur Praktikum
-1. Buka MATLAB dan buat folder kerja.
-2. Jalankan `examples/matlab_basics.m`.
-3. Ubah frekuensi sinus dan matriks A/B.
-4. Buat function sederhana `saturate.m`.
-5. Buka Simulink dan susun Step → Gain → Scope.
-6. Simpan screenshot plot dan model.
+## Pokok materi
+- variabel tanpa deklarasi tipe eksplisit: `a=10;`;
+- vector: `t=0:0.01:5;`;
+- matriks: `A=[1 2;3 4];`;
+- matrix multiplication `A*B` vs element-wise `A.*B`;
+- function: `function y=saturate(x,lo,hi)`;
+- plot: `plot(t,y)`, `grid on`, `legend`;
+- table/timetable untuk data eksperimen;
+- `readtable`, `writetable`;
+- script parameter plant/controller.
 
+## Kebiasaan kerja yang benar
+1. Gunakan nama variabel bermakna (`setpoint`, `temperature`, `rpm`).
+2. Tulis satuan di komentar/label grafik.
+3. Jangan menimpa fungsi MATLAB dengan nama file seperti `step.m`, `plot.m`, `filter.m`.
+4. Gunakan `clear; clc; close all;` secukupnya saat praktikum.
+5. Simpan data mentah sebelum memproses.
 
-## Output Minimal
-- program/model dapat dijalankan;
-- data/grafik disimpan;
-- parameter penting dicatat;
-- hasil dibandingkan dengan teori;
-- kesimpulan menjawab pengaruh parameter kontrol terhadap respon plant.
+## Hubungan dengan kontrol
+MATLAB dipakai untuk membuat model transfer function, mensimulasikan step response, menghitung PID, membaca data DAQMaster, dan berkomunikasi dengan Arduino pada pertemuan berikutnya.

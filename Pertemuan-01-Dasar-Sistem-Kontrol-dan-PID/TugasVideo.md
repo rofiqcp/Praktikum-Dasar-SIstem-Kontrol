@@ -1,19 +1,15 @@
-# Tugas Video Pertemuan 01 — Dasar Sistem Kontrol, PID, dan Briefing Project PCB
+# Pertemuan 01 — Tugas Video — Sistem Kontrol, PID, dan Project PCB
 
-## Format
-Durasi disarankan 8–15 menit. Tampilkan layar, hardware bila ada, dan wajah/presentasi secukupnya.
 
-## Isi Wajib
-1. Perkenalan diri dan tujuan praktikum
-2. Jelaskan sistem kontrol, feedback, open-loop dan closed-loop
-3. Jelaskan P, I, D dan efek tuning
-4. Jalankan simulasi Python dan tampilkan grafik
-5. Jelaskan project PCB Arduino Mega untuk SSR pemanas air dan L293D + encoder motor
-6. Tampilkan blok diagram dan tabel pin project semester
+Buat video yang berisi:
+1. identitas;
+2. pengertian open loop, closed loop, feedback, setpoint, error, plant, controller, actuator;
+3. penjelasan P, I, D beserta efek Kp/Ki/Kd;
+4. demo `control_basics.py` dari source sampai grafik;
+5. perbandingan minimal tiga kombinasi gain;
+6. penjelasan project PCB Arduino Mega: jalur SSR-heater dan L293D-encoder;
+7. pin utama D5, D6, D2, D3, D8, A0;
+8. keselamatan water heater/SSR;
+9. kesimpulan.
 
-## Bukti Running
-- tampilkan proses menjalankan program/model dari awal;
-- ubah minimal 2 parameter/setpoint;
-- tampilkan grafik atau data hasil;
-- jelaskan minimal 3 parameter karakteristik respon sistem;
-- simpulkan konfigurasi yang paling baik dan alasannya.
+**Wajib:** source terlihat, program benar-benar dijalankan, bukan hanya slide.

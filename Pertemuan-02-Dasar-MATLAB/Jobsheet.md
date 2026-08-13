@@ -1,37 +1,20 @@
-# Jobsheet Pertemuan 02 — Dasar-Dasar MATLAB dan Simulink
-
-## A. Persiapan
-- Baca `Materi.md`.
-- Pastikan software/hardware sesuai topik sudah tersedia.
-- Buat folder hasil sendiri, jangan mengubah contoh sebelum contoh dasar berhasil dijalankan.
-
-## B. Langkah Kerja
-1. Buka MATLAB dan buat folder kerja.
-2. Jalankan `examples/matlab_basics.m`.
-3. Ubah frekuensi sinus dan matriks A/B.
-4. Buat function sederhana `saturate.m`.
-5. Buka Simulink dan susun Step → Gain → Scope.
-6. Simpan screenshot plot dan model.
+# Pertemuan 02 — Jobsheet — MATLAB dari Nol
 
 
-## C. Data yang Dicatat
-- setpoint dan parameter controller;
-- waktu sampling;
-- process variable/kecepatan/posisi;
-- output controller;
-- delay time, rise time, peak time, settling time, overshoot, steady-state error bila relevan.
+## Percobaan
+1. Jalankan `examples/matlab_basics.m` per bagian.
+2. Buat vector waktu 0–10 s dengan Ts 0.01 s.
+3. Buat sinyal sinus 1 Hz dan noise kecil.
+4. Plot raw dan moving-average sederhana.
+5. Buat matriks 2×2, hitung determinant dan inverse.
+6. Panggil function `saturate.m` untuk membatasi data ke -1…1.
+7. Buat table `time,signal`, simpan ke CSV, lalu baca ulang dengan `readtable`.
 
-## D. Verifikasi
-- [ ] Program dapat start tanpa error.
-- [ ] Input/setpoint dapat diubah.
-- [ ] Output plant berubah sesuai command.
-- [ ] Feedback terbaca.
-- [ ] Grafik/data tersimpan.
-- [ ] Ada pembahasan karakteristik respon.
+## Latihan kontrol
+Simulasikan respon diskrit first-order: `y(k)=y(k-1)+Ts/tau*(-y(k-1)+K*u(k))`. Gunakan input step dan plot hasil.
 
-## E. Pertanyaan Analisis
-1. Apa input, controller, actuator, plant, sensor dan feedback pada percobaan?
-2. Apa perbedaan open-loop dan closed-loop pada kasus ini?
-3. Apa efek menaikkan Kp?
-4. Kapan integral membantu dan kapan menimbulkan windup?
-5. Apa peran derivative/filter terhadap noise dan overshoot?
+## Output
+- file `.m`;
+- satu CSV;
+- minimal dua grafik;
+- jawaban beda `*` dan `.*`, `^` dan `.^`.

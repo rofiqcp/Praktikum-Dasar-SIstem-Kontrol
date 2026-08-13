@@ -1,0 +1,2 @@
+time_s,temperature_C,setpoint_C,mode,Kp_or_PB,Ki_or_I,Kd_or_D,hysteresis_C,note
+0,,50,ONOFF,,,,2,start

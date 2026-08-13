@@ -1,53 +1,36 @@
-# Pertemuan 03 — MATLAB Transfer Function: Pemanas Air, Motor DC Kecepatan dan Posisi
-
-## Capaian Pembelajaran
-- membentuk transfer function
-- menganalisis step response dan pole
-- membedakan plant speed dan position
-- membandingkan MATLAB dan Python/Colab
-
-## Materi Inti
-
-### Transfer function
-Untuk sistem LTI, transfer function adalah `G(s)=Y(s)/U(s)` dengan kondisi awal nol.
-
-### Plant pemanas air — model orde satu/FOPDT sederhana
-\[
-G_T(s)=\frac{K_T}{\tau_T s+1}
-\]
-Model awal praktikum menggunakan `K_T=0.8 °C/%heater` dan `tau=45 s`. Parameter dapat diganti dari hasil eksperimen P5–P6.
-
-### Motor DC — kecepatan
-Model elektromekanik standar:
-\[
-G_\omega(s)=\frac{K}{(Js+b)(Ls+R)+K^2}
-\]
-
-### Motor DC — posisi
-Posisi adalah integral kecepatan:
-\[
-G_\theta(s)=\frac{G_\omega(s)}{s}
-\]
-
-Analisis awal menggunakan `step`, `impulse`, `pole`, `zero`, `dcgain` dan `stepinfo`.
+# Pertemuan 03 — MATLAB Transfer Function — Pemanas Air, Motor DC Speed, Motor DC Position
 
 
-## Program yang Wajib Dijalankan
-- `examples/plant_transfer_functions.m`
-- `examples/colab/plant_transfer_function.ipynb`
+## Capaian
+Mahasiswa dapat menurunkan/menggunakan transfer function, pole-zero, step response, dan membedakan model temperatur, speed, serta position.
 
-## Alur Praktikum
-1. Jalankan `examples/plant_transfer_functions.m`.
-2. Amati tiga plot: pemanas air, motor speed, motor position.
-3. Ubah parameter termal K dan tau.
-4. Ubah J, b, R, L, Kt motor dan amati pole/respon.
-5. Jalankan notebook Colab `examples/colab/plant_transfer_function.ipynb` sebagai pembanding Python.
-6. Jelaskan mengapa transfer posisi mempunyai integrator tambahan.
+## 1. Pemanas air
+Model awal praktikum: first-order plus dead time (FOPDT):
 
+`G_T(s)=K/(tau*s+1) * exp(-L*s)`
 
-## Output Minimal
-- program/model dapat dijalankan;
-- data/grafik disimpan;
-- parameter penting dicatat;
-- hasil dibandingkan dengan teori;
-- kesimpulan menjawab pengaruh parameter kontrol terhadap respon plant.
+- `K`: process gain;
+- `tau`: time constant;
+- `L`: dead time.
+
+Untuk simulasi rasional, delay dapat didekati Padé. Nilai contoh di source hanya untuk latihan; plant nyata harus diidentifikasi dari P5/P6/P9.
+
+## 2. Motor DC — kecepatan
+Dengan resistansi `R`, induktansi `L`, inertia `J`, damping `b`, motor constant `K`:
+
+`G_w(s)=K / ((J*s+b)(L*s+R)+K^2)`
+
+Output adalah rad/s terhadap tegangan input.
+
+## 3. Motor DC — posisi
+Karena `theta_dot = omega`, maka:
+
+`G_theta(s)=G_w(s)/s`.
+
+Tambahan integrator membuat plant posisi berbeda karakter dari speed. Karena itu gain PID speed tidak otomatis cocok untuk position.
+
+## 4. Analisis MATLAB
+Gunakan `tf`, `step`, `pole`, `zero`, `dcgain`, `stepinfo`, `feedback`, `pade`.
+
+## 5. Identifikasi sederhana water heater
+Dari step open-loop yang stabil, estimasi kasar process gain: `K=(Delta T)/(Delta u)`. Time constant dapat diperkirakan dari waktu mencapai sekitar 63.2% perubahan keluaran setelah dead time.

@@ -1,44 +1,19 @@
-# Pertemuan 04 — MATLAB PID dan PID Block Buat Sendiri
-
-## Capaian Pembelajaran
-- memahami closed-loop PID
-- membandingkan P/PI/PID
-- membangun PID dari blok dasar
-- menganalisis efek saturasi dan anti-windup
-
-## Materi Inti
-
-Pertemuan ini menerapkan P, PI, PD dan PID pada plant pemanas air dan motor. Selain memakai block PID bawaan, mahasiswa **membangun PID sendiri** dari jalur P + I + D sehingga memahami setiap komponen.
-
-### Closed-loop
-`T(s)=C(s)G(s)/(1+C(s)G(s))`.
-
-### Manual PID block
-- P: `Kp*e`
-- I: `Ki * 1/s * e`
-- D praktis: derivative dengan low-pass filter agar tidak memperkuat noise berlebihan
-- Saturation untuk batas actuator
-- Anti-windup diperlukan saat output jenuh.
-
-Script `build_pid_manual_simulink.m` membuat model Simulink dari nol secara programatik, sehingga tidak bergantung pada file `.slx` binary.
+# Pertemuan 04 — MATLAB PID dan PID Block Dibuat Sendiri
 
 
-## Program yang Wajib Dijalankan
-- `examples/pid_comparison.m`
-- `examples/build_pid_manual_simulink.m`
+## Tujuan
+Membandingkan PID MATLAB dengan implementasi P+I+D yang dibangun sendiri dan memahami setiap sinyal internal.
 
-## Alur Praktikum
-1. Jalankan `pid_comparison.m` untuk pemanas air.
-2. Uji P, PI, PID dan bandingkan `stepinfo`.
-3. Jalankan `build_pid_manual_simulink.m`.
-4. Buka model `pid_manual_water_heater.slx` yang dihasilkan.
-5. Tunjukkan jalur P, I, D dan Sum.
-6. Ubah gain dan amati Scope.
+## Struktur
+`e = r-y`, `P=Kp*e`, `I=Ki*∫e dt`, `D=Kd*de/dt`, `u=P+I+D` lalu saturation.
 
+Derivative nyata sebaiknya difilter: `D(s)=Kd*N*s/(s+N)` atau bentuk ekuivalen agar noise frekuensi tinggi tidak diperkuat tanpa batas.
 
-## Output Minimal
-- program/model dapat dijalankan;
-- data/grafik disimpan;
-- parameter penting dicatat;
-- hasil dibandingkan dengan teori;
-- kesimpulan menjawab pengaruh parameter kontrol terhadap respon plant.
+## Anti-windup
+Jika actuator hanya mampu 0–100% (heater) atau -255…255 (motor), integrator dapat terus membesar saat command saturasi. Solusi: conditional integration, clamping, atau back-calculation.
+
+## Tuning
+Gunakan `pid`, `pidtune`, `feedback`, dan `stepinfo` untuk eksperimen. Nilai tuning MATLAB adalah titik awal; verifikasi selalu pada plant dan batas aktuator nyata.
+
+## Model Simulink
+`build_pid_manual_simulink.m` membuat model lengkap: Step → Sum error → cabang P/I/D → Sum PID → Saturation → Plant → Scope + feedback. Builder menyimpan model sebagai `.slx` agar model dapat diregenerasi dari source.

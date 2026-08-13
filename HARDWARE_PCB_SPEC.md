@@ -1,42 +1,61 @@
-# Hardware PCB Control Trainer — Arduino Mega 2560
+# Spesifikasi Project PCB — Arduino Mega Control Trainer
 
-## 1. Sasaran
-PCB/shield digunakan dari Pertemuan 8 sampai 16 untuk dua plant: pemanas air dan motor DC encoder. PCB **tidak membawa jalur mains AC**; hanya sisi logika, sensor, driver motor low-voltage, dan konektor input SSR.
+## 1. Tujuan
+Membuat shield/PCB trainer yang dapat dipakai untuk **kontrol temperatur pemanas air** dan **kontrol motor DC kecepatan/posisi** dari MATLAB maupun firmware PlatformIO.
 
-## 2. Blok Fungsional
-```text
-Thermocouple/Temp Sensor ──> Interface ──> Arduino Mega ──> SSR Logic ──> External Isolated Heater Power Stage
-Encoder A/B ─────────────────────────────> Arduino Mega ──> L293D ─────> DC Motor
-USB Serial <─────────────────────────────> Arduino Mega <──────────────> Python / Node.js / MATLAB
-```
+## 2. Arsitektur
+### Jalur temperatur
+- Arduino Mega 2560.
+- Input temperatur utama: `A0` untuk sensor/transmitter low-voltage terkondisi 0–5 V.
+- Header opsional termokopel digital/MAX6675: CS D49, SO D50, SCK D52.
+- Output SSR: D8 melalui rangkaian driver yang sesuai input SSR.
+- LED indikator SSR dan hardware enable.
+- Konektor plant heater low-voltage; bila SSR mengendalikan mains, terminal mains **tidak ditempatkan di PCB logika mahasiswa**.
 
-## 3. Minimum I/O
-- D2 encoder A interrupt
-- D3 encoder B interrupt
-- D5 PWM motor CW
-- D6 PWM motor CCW
-- D8 SSR control
-- SPI header untuk MAX6675/MAX31855: MISO/SO, SCK, CS
-- 5V, 3.3V, GND test points
-- header UART/USB serial via Mega
-- terminal motor dan supply motor terpisah dari 5V logika
+### Jalur motor DC
+- L293D atau footprint/socket kompatibel.
+- D5 = PWM CW, D6 = PWM CCW.
+- D2 = Encoder A, D3 = Encoder B.
+- Enable driver dapat ditarik HIGH melalui jumper atau pin terpisah.
+- Supply motor terpisah dari 5 V logic, tetapi ground low-voltage disatukan sesuai desain.
+- Header encoder dengan VCC, GND, A, B.
+- Dioda flyback bila driver/varian IC yang digunakan memerlukannya sesuai datasheet.
 
-## 4. L293D
-Gunakan suplai logika 5V dan suplai motor sesuai motor. Pasang kapasitor decoupling dekat IC. Pastikan semua GND low-voltage common. Motor yang arus stall-nya melampaui kemampuan L293D **tidak boleh** digunakan; pakai driver yang sesuai jika perlu.
+## 3. I/O tambahan yang direkomendasikan
+- potensiometer A1 untuk manual setpoint;
+- push button START/STOP;
+- LED status RUN/FAULT;
+- test point 5V, GND, A0, D5, D6, D8, encoder A/B;
+- konektor UART0 USB/serial tetap bebas untuk komunikasi PC.
 
-## 5. SSR
-Arduino hanya mengendalikan terminal input DC SSR melalui konektor low-voltage. Verifikasi kebutuhan arus input SSR. Tambahkan LED indikator dan resistor seri. Sisi beban AC/heater ditempatkan di modul terpisah ber-enclosure.
+## 4. Deliverable project
+1. block diagram;
+2. schematic;
+3. perhitungan resistor/driver dasar;
+4. BOM;
+5. PCB layout + DRC;
+6. Gerber dan drill;
+7. assembly;
+8. continuity test tanpa power;
+9. bring-up low-voltage;
+10. demo LED/ADC, motor manual, encoder, SSR low-voltage;
+11. demo PID suhu, speed, dan position;
+12. laporan perubahan/revisi.
 
-## 6. Checklist PCB
-- [ ] ERC/DRC lulus
-- [ ] footprint Arduino Mega header benar
-- [ ] polarity connector jelas
-- [ ] test point 5V/3V3/GND/PWM/SSR/encoder
-- [ ] label pin di silkscreen
-- [ ] fuse low-voltage motor bila diperlukan
-- [ ] decoupling 100 nF tiap IC + bulk capacitor rail motor
-- [ ] tidak ada trace mains pada shield praktikum
-- [ ] terminal SSR diberi label `SSR+` dan `SSR-` hanya untuk sisi input
+## 5. Milestone
+- **P1:** briefing dan pembagian fungsi.
+- **P7:** komunikasi MATLAB–Arduino dan I/O dasar.
+- **P8:** review schematic/layout + bring-up.
+- **P9–P12:** validasi kontrol menggunakan MATLAB.
+- **P13–P15:** validasi firmware PlatformIO + GUI.
+- **P16:** responsi dan demo end-to-end.
 
-## 7. Bring-up
-Urutan pengujian: power rail → serial → encoder → L293D tanpa beban → motor low duty → sensor temperatur → output SSR dengan LED dummy → baru integrasi plant.
+## 6. Kriteria lulus hardware
+- tidak short;
+- Arduino dapat diprogram;
+- A0 terbaca stabil;
+- D8 mengaktifkan indikator/SSR input dengan benar;
+- D5/D6 mampu menggerakkan motor dua arah;
+- encoder A/B menghasilkan count bertanda;
+- emergency/enable bekerja;
+- tidak ada bagian mains terbuka pada area praktikan.
