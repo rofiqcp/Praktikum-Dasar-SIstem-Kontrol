@@ -1,34 +1,65 @@
-# Tugas Video Pertemuan 4
+# Tugas Video Pertemuan 4 — PID MATLAB dan PID Manual Simulink
 
-- jelaskan rumus PID;
-- demonstrasikan P, PI, PID;
-- jelaskan saturasi dan windup;
-- jalankan `pid_comparison.m`;
-- generate `pid_manual_water_heater.slx`;
-- buka blok P/I/D manual;
-- jelaskan perbedaan PID kontinu dan diskrit;
-- tampilkan tabel hasil tuning.
+## Durasi
+Disarankan 7–12 menit.
 
-## Format bukti video
-Video harus memperlihatkan **proses**, bukan hanya hasil akhir:
-1. identitas, tujuan dan diagram sistem;
-2. teori inti beserta persamaan/satuan yang dipakai;
-3. source/model dibuat atau dibuka dan bagian penting dijelaskan;
-4. program di-run/compile/upload di layar;
-5. hardware atau simulasi menghasilkan data;
-6. minimal satu parameter diubah dan pengaruhnya dibandingkan;
-7. grafik/tabel dibahas menggunakan istilah respons sistem;
-8. error/fault atau satu kasus troubleshooting dijelaskan;
-9. kesimpulan menyebut parameter terbaik dan alasannya.
+## Isi wajib
 
-### File pendamping
-Sertakan source, data mentah, hasil plot dan tabel parameter. Nama file gunakan `NIM_Nama_P04_...` agar mudah diperiksa.
+### 1. Diagram closed-loop
+Jelaskan hubungan setpoint, error, controller, plant, output, dan feedback negatif.
 
-### Kriteria penilaian yang disarankan
-- pemahaman konsep 25%;
-- prosedur dan program benar 25%;
-- bukti running/hardware 20%;
-- analisis data 20%;
-- kerapian dan kesimpulan 10%.
+### 2. P, PI, PID
+Tampilkan hasil eksperimen P, PI, dan PID. Untuk setiap controller sebutkan gain dan minimal dua parameter respon dari `stepinfo`.
 
-**Expected result:** Kurva P/PI/PID dapat dibandingkan dan blok P/I/D manual terbentuk di Simulink.
+### 3. Gain sweep
+Tunjukkan minimal dua nilai Kp dan dua nilai Ki. Jelaskan perubahan respon berdasarkan hasil simulasi.
+
+### 4. `pidtune`
+Jalankan `pidtune` dan bandingkan gain/result dengan tuning manual kelompok. Jelaskan bahwa tuning otomatis tetap harus dievaluasi.
+
+### 5. PID manual Simulink
+Jalankan:
+
+```matlab
+run('examples/build_pid_manual_simulink.m')
+```
+
+Buka model hasil dan tunjukkan jalur:
+- error;
+- P;
+- I + Integrator;
+- derivative/filter;
+- penjumlahan P+I+D;
+- plant;
+- feedback;
+- Scope.
+
+### 6. Verifikasi
+Bandingkan hasil PID manual dengan PID built-in menggunakan gain yang sama. Jelaskan penyebab jika kurva berbeda.
+
+### 7. Kesimpulan
+Sampaikan pengaruh Kp, Ki, dan Kd serta hubungan P4 dengan implementasi digital berikutnya.
+
+## Bukti yang wajib terlihat
+- source MATLAB;
+- Command Window saat run;
+- `stepinfo`;
+- grafik P/PI/PID;
+- model Simulink manual;
+- nilai gain yang digunakan.
+
+## Rubrik
+
+| Komponen | Bobot |
+|---|---:|
+| Pemahaman closed-loop | 15% |
+| Analisis P/PI/PID | 25% |
+| Penggunaan metrics | 20% |
+| PID manual Simulink | 25% |
+| Verifikasi dan kesimpulan | 15% |
+
+## Format nama
+
+```text
+P04_NIM_Nama_PID_MATLAB
+```
