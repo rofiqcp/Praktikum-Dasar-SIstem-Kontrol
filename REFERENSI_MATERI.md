@@ -1,14 +1,16 @@
-# Referensi materi yang dijadikan dasar
+# Referensi Materi dan Jejak Sumber
 
-Repository ini disusun ulang dari materi praktikum yang tersedia dan silabus terbaru.
+Repository ini merupakan implementasi praktikum dari bahan kuliah/panduan yang diberikan untuk mata kuliah Dasar Sistem Kontrol, kemudian disusun ulang mengikuti format repository Praktikum Sistem Embedded.
 
-- Pertemuan 2 Praktikum Dasar Sistem Kontrol — konsep sistem kontrol modern dan PID.
-- Pertemuan 3 Praktikum Dasar Sistem Kontrol — instalasi MATLAB, dasar Simulink, block sources/sinks/math/user-defined/subsystem/m-file.
-- Pertemuan 4 Praktikum Dasar Sistem Kontrol — pemodelan sistem dinamis dan PID.
-- MODUL SISPENG UNIT 5 — sistem kendali temperatur Autonics TK4S-T4RN dan DAQMaster.
-- Autonics TK Series manual/datasheet — ON/OFF, hysteresis, PID, auto/manual, SSR output, RS485/DAQMaster.
-- Pertemuan 9/10/11 — PWM motor DC, encoder, filter, PID speed/position dan anti-windup.
-- Pertemuan 12 — autotuning PID motor DC (dipakai sebagai referensi pengayaan; silabus terbaru P12 difokuskan ke PID posisi MATLAB–Arduino).
-- Pertemuan 13 — PlatformIO, AI editor, Python GUI, logging dan karakteristik respon sistem.
+Sumber internal yang menjadi dasar topik meliputi materi: dasar sistem kontrol/PID; dasar MATLAB/Simulink; pemodelan sistem dinamis; Autonics TK4S/T4RN; DAQMaster; PWM dan encoder motor DC; PID speed/position; serta PlatformIO + Python GUI. Manual Autonics digunakan untuk terminologi ON/OFF hysteresis, PID, komunikasi dan DAQ logging.
 
-Referensi teori umum yang disarankan pada materi awal: Ogata — *Modern Control Engineering*; Dorf & Bishop — *Modern Control Systems*; serta buku/panduan PID industri yang tercantum pada materi kuliah.
+## Referensi teori umum yang direkomendasikan
+1. K. Ogata, *Modern Control Engineering*.
+2. R. C. Dorf & R. H. Bishop, *Modern Control Systems*.
+3. Dokumentasi MATLAB/Simulink dan Control System Toolbox yang sesuai versi lab.
+4. Dokumentasi Arduino Mega 2560 dan ATmega2560.
+5. Datasheet L293/L293D dari pabrikan komponen yang digunakan.
+6. Manual controller Autonics TK Series dan DAQMaster untuk model aktual di laboratorium.
+
+## Catatan reproducibility
+Nilai parameter plant pada contoh P3/P4 adalah model pedagogik. Untuk laporan eksperimen, mahasiswa harus mengganti/mengidentifikasi parameter berdasarkan plant aktual dan menyatakan satuan, metode identifikasi, sample time dan kondisi pengujian.

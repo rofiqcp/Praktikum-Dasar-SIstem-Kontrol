@@ -1,40 +1,54 @@
-# Pertemuan 01 — Jobsheet — Simulasi Dasar Open/Closed Loop dan PID
+# Jobsheet Pertemuan 1
 
+## Tujuan
+1. Mengidentifikasi elemen closed-loop.
+2. Mengamati pengaruh Kp/Ki/Kd melalui simulasi.
+3. Membuat requirement awal PCB trainer.
 
-## Persiapan
+## Alat
+- Laptop.
 - Python 3.10+.
-- `pip install -r ../requirements.txt` atau minimal `numpy scipy matplotlib`.
+- `numpy`, `matplotlib`.
 
-## Percobaan A — open loop
-1. Buka `examples/control_basics.py`.
-2. Jalankan `python control_basics.py`.
-3. Amati respon plant first-order tanpa feedback.
-4. Ubah `tau` menjadi 1, 2, 5; catat perubahan kecepatan respon.
+## Percobaan A — Open-loop
+```bash
+python examples/control_basics.py
+```
 
-## Percobaan B — closed loop P
-1. Ubah `kp` = 0.5, 1, 2, 4.
-2. Catat rise time, overshoot, dan steady-state error.
-3. Jelaskan mengapa P saja dapat menyisakan offset.
+Amati grafik open-loop. Catat:
+- nilai akhir;
+- apakah output mencapai SP;
+- efek perubahan gain plant.
 
-## Percobaan C — PI/PID
-1. Aktifkan `ki` bertahap.
-2. Tambahkan `kd` kecil.
-3. Simpan grafik.
-4. Bandingkan P, PI, PID dengan tabel.
+## Percobaan B — Closed-loop PID
+Ubah di file:
+- `KP`;
+- `KI`;
+- `KD`.
 
-## Percobaan D — briefing PCB
-Buat block diagram project: Arduino Mega → SSR → heater → sensor → Arduino, serta Arduino Mega → L293D → motor → encoder → Arduino.
+Lakukan minimal:
+1. P saja;
+2. PI;
+3. PID.
 
-## Bukti wajib
-- terminal saat program berjalan;
-- grafik P/PI/PID;
-- tabel parameter dan metrik;
-- gambar block diagram project PCB;
-- penjelasan fail-safe output OFF saat reset.
+Catat rise time, overshoot, settling secara kualitatif.
 
-## Pertanyaan analisis
-1. Apa beda command controller dan keluaran plant?
-2. Mengapa closed loop membutuhkan tanda feedback benar?
-3. Apa akibat sensor terbalik pada PID?
-4. Mengapa integral membutuhkan anti-windup?
-5. Mengapa derivative mudah terganggu noise?
+## Percobaan C — Requirement PCB
+Buat tabel net:
+`D5, D6, D2, D3, D8, A0, A1, 5V, GND, motor supply`.
+
+Gambar diagram blok PCB.
+
+## Hasil yang dikumpulkan
+- screenshot/PNG grafik;
+- tabel variasi Kp/Ki/Kd;
+- diagram blok PCB;
+- daftar komponen awal;
+- jawaban analisis.
+
+## Pertanyaan
+1. Mengapa closed-loop lebih tahan perubahan plant?
+2. Mengapa Ki dapat menyebabkan windup?
+3. Mengapa D sensitif noise?
+4. Mengapa heater membutuhkan time-proportional, bukan PWM kHz pada relay mekanik?
+5. Apa risiko jika D5 dan D6 aktif bersamaan pada driver arah motor?

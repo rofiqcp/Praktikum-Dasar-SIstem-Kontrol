@@ -1,17 +1,42 @@
-# Pertemuan 12 — MATLAB–Arduino Kontrol PID Posisi Motor DC
+# Pertemuan 12 — MATLAB–Arduino PID Posisi Motor DC
 
+## 1. Loop position
+`SP_deg → error_deg → PID → signed PWM → motor → encoder position_deg`
 
-## Tujuan
-Mengendalikan posisi encoder ke setpoint count/degree dengan PID bertanda dan memahami perbedaan plant posisi vs speed.
+Posisi menggunakan encoder count langsung; tidak perlu diferensiasi untuk feedback utama, sehingga noise speed tidak dominan seperti P11.
 
-## Zero/homing praktikum
-Untuk trainer tanpa absolute encoder, `Z` menjadikan count saat ini sebagai nol. Ini bukan homing keselamatan otomatis. Bila mekanisme memiliki hard-stop, jangan membuat prosedur homing yang menabrak hard-stop tanpa current/limit switch protection.
+## 2. Zero
+Sebelum closed-loop, tetapkan posisi referensi: `ZERO,1`.
 
-## Error posisi
-`e_pos = SP_count - count`. Command PID -255…255. Dekat target dapat diberi deadband kecil untuk mencegah dithering karena quantization/friction.
+Zero software bukan limit switch. Jangan menganggap zero aman secara mekanik tanpa prosedur homing yang benar.
 
-## Derivative
-Derivative position error berkaitan dengan velocity. Filter derivative atau gunakan velocity terukur secara hati-hati bila noise besar.
+## 3. Saturasi
+Position PID dapat memerintahkan PWM tinggi jika target jauh. Mulai `MAXPWM` rendah.
 
-## Kriteria
-Accuracy, overshoot posisi, settling, repeatability dari beberapa initial position, dan kemampuan bergerak dua arah.
+## 4. Integral
+Pada position loop, integral sering kecil/0 terlebih dahulu. Jika mekanik memiliki friction/dead-zone, sedikit Ki dapat menghilangkan error residual tetapi meningkatkan overshoot/windup.
+
+## 5. Derivative
+Derivative on measurement/position membantu damping tetapi encoder quantization dapat menambah noise. Filter bila perlu.
+
+## 6. Project
+P12 adalah checkpoint project, sehingga `TugasVideo.md` diganti `Project.md`.
+
+## 7. MATLAB
+Firmware menjalankan PID. MATLAB mengirim target/gain dan merekam step response.
+
+## Program referensi dan urutan belajar
+Topik inti pertemuan ini adalah **PID posisi**. Program yang harus dibuka dan dipahami:
+- `arduino_position_pid/arduino_position_pid.ino`
+- `matlab_position_pid_experiment.m`
+- `build_motor_position_pid_simulink.m`
+
+Urutan kerja yang direkomendasikan: pahami persamaan/diagram → jalankan contoh default → ubah satu parameter → catat output → jelaskan sebab perubahan → simpan bukti.
+
+## Hasil yang diharapkan
+Target sudut positif/negatif tercapai tanpa hard-stop dan STOP mematikan kedua arah.
+
+## Validasi dan troubleshooting
+Zero encoder sebelum eksperimen, mulai MAXPWM rendah, dan jangan gunakan target di luar ruang gerak mekanik.
+
+Setiap hasil eksperimen harus mencatat konfigurasi, satuan, sample time/interval akuisisi, dan kondisi awal. Hasil yang “terlihat bagus” tetapi tidak dapat direproduksi belum dianggap valid.

@@ -1,4 +1,3 @@
-# Pertemuan 14 — Tugas Video — PIO PID Suhu + GUI + CSV/JPG
+# Tugas Video Pertemuan 14
 
-
-Video wajib memperlihatkan build/upload firmware, protocol serial, GUI connect/disconnect/start/stop, tuning, live graphs, save CSV, save JPG, metrik delay/rise/peak/settling/overshoot/steady-state error, dan satu iterasi bantuan AI yang diuji.
+Wajib: PlatformIO build/upload, `readTemperatureC`, anti-windup, SSR window, GUI `--demo`, connect hardware, setting SP/Kp/Ki/Kd, live graph, Start/Stop, CSV/XLSX/JPG, response metrics, sensor fault, heartbeat disconnect test, prompt AI dan review perubahan.

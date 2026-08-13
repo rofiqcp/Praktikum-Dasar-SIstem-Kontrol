@@ -1,0 +1,26 @@
+name: validate-repository
+
+on:
+  push:
+    branches: [v1]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Structural and Python validation
+        run: python validate_repo.py
+      - name: Response metrics unit test
+        run: |
+          cd shared/python
+          python test_response_metrics.py
+      - name: Node syntax
+        run: |
+          if [ -f Pertemuan-16-Responsi-P09-P15/examples/node_serial_logger/index.js ]; then
+            node --check Pertemuan-16-Responsi-P09-P15/examples/node_serial_logger/index.js
+          fi

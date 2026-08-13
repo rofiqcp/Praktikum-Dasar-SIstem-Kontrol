@@ -1,0 +1,5 @@
+time_s,setpoint_C,temp_C,output_percent,mode,note
+0,50,,0,ONOFF,
+10,50,,,ONOFF,
+20,50,,,ONOFF,
+30,50,,,ONOFF,

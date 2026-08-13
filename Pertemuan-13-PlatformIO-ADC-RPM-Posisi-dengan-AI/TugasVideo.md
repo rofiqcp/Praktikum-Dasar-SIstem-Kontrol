@@ -1,4 +1,5 @@
-# Pertemuan 13 — Tugas Video — PlatformIO + AI Sensor
+# Tugas Video Pertemuan 13
 
+Tampilkan VS Code/PlatformIO, `platformio.ini`, build/upload/monitor, ISR, ADC A1, encoder signed, CPR, RPM/position, MA/LPF, prompt AI, review hasil AI, compile setelah perubahan, dan contoh bug CPR/arah.
 
-Tampilkan instalasi editor/PIO/Python, pembuatan project, `platformio.ini`, interrupt encoder, build/upload/monitor, Python plotter, dan satu iterasi prompt AI → perubahan → compile → test. Jelaskan semua pin dan format telemetri.
+Video harus menunjukkan proses running dan bukti data, bukan hanya source.

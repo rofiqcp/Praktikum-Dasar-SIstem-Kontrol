@@ -1,118 +1,251 @@
 <div align="center">
 
-# 🎛️ Praktikum Dasar Sistem Kontrol
-### MATLAB/Simulink • Autonics TK4S/T4RN • Arduino Mega 2560 • PlatformIO • Python GUI • Node.js
+# 🎛️ Praktikum Dasar Sistem Kontrol — Branch `v1`
 
-**16 pertemuan — teori → simulasi → eksperimen pemanas air → motor DC → embedded PID → GUI/DAQ → responsi**
+**MATLAB/Simulink • Autonics TK4S/T4RN • Arduino Mega 2560 • PlatformIO • Python GUI • Node.js**
+
+Repository ini adalah paket praktikum **16 pertemuan** yang dirancang agar mahasiswa bergerak dari konsep sistem kontrol dan PID, pemodelan MATLAB/Simulink, eksperimen pemanas air dengan Autonics, integrasi MATLAB–Arduino, hingga implementasi embedded PID dan GUI pada Arduino Mega 2560.
 
 </div>
 
 ---
 
-## Tentang repository
-Repository ini adalah paket praktikum **Dasar Sistem Kontrol** lengkap 16 pertemuan. Struktur mengikuti pola repository `Praktikum-Sistem-Embedded`: setiap pertemuan memiliki `Materi.md`, `Jobsheet.md`, serta `TugasVideo.md`. Khusus **Pertemuan 08, 12, dan 16**, `TugasVideo.md` diganti menjadi `Project.md`.
+## 1. Target pembelajaran
 
-Semua pertemuan mempunyai sesuatu yang benar-benar dijalankan: script MATLAB `.m`, pembangun model Simulink `.slx`, Python/Colab, program Arduino/PlatformIO, GUI Python, atau Node.js sesuai topik. Model `.slx` dibuat secara deterministik oleh file `build_*.m`; jalankan builder sekali di MATLAB agar file `.slx` tersimpan pada folder `models/`.
+Setelah menyelesaikan seluruh pertemuan, mahasiswa diharapkan mampu:
 
-> **Catatan model Simulink:** environment otomatis yang membuat repository ini tidak mempunyai runtime MATLAB/Simulink, sehingga file biner `.slx` tidak dipalsukan. Sebagai gantinya tersedia builder MATLAB lengkap yang membuat dan menyimpan `.slx` menggunakan API resmi `new_system`, `add_block`, `add_line`, dan `save_system`. Dengan demikian model dapat dibuat ulang dan diedit dari source.
+1. Menjelaskan open-loop, closed-loop, feedback, setpoint, error, plant, controller, sensor, dan aktuator.
+2. Menurunkan dan mensimulasikan transfer function plant pemanas air, motor DC kecepatan, dan motor DC posisi.
+3. Memahami kontribusi P, I, D, saturasi, anti-windup, sampling time, serta karakteristik respon sistem.
+4. Mengoperasikan Autonics TK4S/T4RN pada plant pemanas air untuk ON/OFF, hysteresis, dan PID/time-proportional.
+5. Mengambil data manual dengan stopwatch dan otomatis melalui DAQMaster, kemudian menganalisisnya di Excel/MATLAB/Python.
+6. Mengintegrasikan MATLAB dengan Arduino Mega 2560 untuk LED, ADC, temperatur, encoder, RPM, posisi, PID kecepatan, dan PID posisi.
+7. Menggunakan VS Code/PlatformIO untuk membuat firmware Arduino Mega dari awal.
+8. Membuat GUI Python untuk commissioning, tuning, plotting, logging CSV/XLSX, ekspor JPG, serta evaluasi respon.
+9. Menggunakan AI coding assistant dengan proses engineering yang benar: prompt → review → compile → hardware test → analisis.
+10. Menyelesaikan trainer PCB Arduino Mega untuk dua plant: pemanas air melalui SSR dan motor DC melalui L293D + encoder.
 
-## Silabus 16 pertemuan
+---
 
-| P | Materi | Praktik utama | Penilaian |
+## 2. Silabus 16 pertemuan
+
+| P | Topik | Program/alat utama | Tugas |
 |---:|---|---|---|
-| 01 | Dasar sistem kontrol, PID, briefing project PCB | Python simulasi open/closed loop + PID | TugasVideo |
-| 02 | Dasar-dasar MATLAB | command, script, function, plot, matriks | TugasVideo |
-| 03 | Transfer function plant pemanas air, motor speed, motor position | MATLAB + Colab | TugasVideo |
-| 04 | PID MATLAB dan PID block dibuat sendiri | MATLAB + generator Simulink | TugasVideo |
-| 05 | Autonics + pemanas air, pengambilan manual stopwatch | tabel Excel/CSV + analisis respon | TugasVideo |
-| 06 | Autonics lanjutan + DAQMaster + MATLAB | export CSV DAQMaster → MATLAB | TugasVideo |
-| 07 | Pengenalan MATLAB–Arduino | LED, ADC, plotting real-time | TugasVideo |
-| 08 | Responsi P1–P7 + checkpoint PCB | tanya jawab, demo, review hardware | **Project** |
-| 09 | MATLAB–Arduino kontrol suhu PID | water heater + SSR time proportional | TugasVideo |
-| 10 | MATLAB–Arduino baca RPM dan posisi motor | encoder A/B, RPM, posisi | TugasVideo |
-| 11 | MATLAB–Arduino PID kecepatan | PID speed + anti-windup | TugasVideo |
-| 12 | MATLAB–Arduino PID posisi | PID position + evaluasi project | **Project** |
-| 13 | PlatformIO + AI: ADC, RPM, posisi | VS Code/PIO Arduino Mega + Python serial plotter | TugasVideo |
-| 14 | PIO Arduino Mega kontrol suhu + GUI + AI | grafik live, CSV, JPG, metrik respon | TugasVideo |
-| 15 | PIO Arduino Mega kontrol speed/position + GUI + AI | grafik live, CSV, JPG, metrik respon | TugasVideo |
-| 16 | Responsi P9–P15 | tanya jawab, live coding, demo trainer | **Project** |
+| 01 | Dasar sistem kontrol & PID + briefing project PCB | Python/Colab | TugasVideo |
+| 02 | Dasar MATLAB | MATLAB `.m` | TugasVideo |
+| 03 | Transfer function pemanas air, motor speed, motor position | MATLAB + Simulink builder + Colab | TugasVideo |
+| 04 | PID MATLAB & PID block dibuat sendiri | MATLAB + Simulink builder | TugasVideo |
+| 05 | Autonics + pemanas air, data manual stopwatch | Excel/CSV + Python | TugasVideo |
+| 06 | Autonics + DAQMaster + analisis MATLAB | DAQMaster + MATLAB/Python | TugasVideo |
+| 07 | MATLAB–Arduino: LED & ADC | MATLAB Support Package | TugasVideo |
+| 08 | Responsi P1–P7 + checkpoint PCB | Test PCB | **Project** |
+| 09 | MATLAB–Arduino kontrol suhu PID | Arduino Mega + MATLAB | TugasVideo |
+| 10 | MATLAB–Arduino baca RPM & posisi motor | Encoder + serial/MATLAB | TugasVideo |
+| 11 | MATLAB–Arduino PID kecepatan | Arduino Mega + MATLAB | TugasVideo |
+| 12 | MATLAB–Arduino PID posisi | Arduino Mega + MATLAB | **Project** |
+| 13 | PlatformIO + ADC/RPM/posisi + AI | VS Code + PlatformIO | TugasVideo |
+| 14 | PlatformIO PID suhu + GUI lengkap | C++ + PyQt5 | TugasVideo |
+| 15 | PlatformIO PID speed/position + GUI lengkap | C++ + PyQt5 | TugasVideo |
+| 16 | Responsi P9–P15 + validasi akhir | Python/Node + hardware | **Project** |
 
-## Project hardware semester
-Mahasiswa membuat **PCB/shield Arduino Mega 2560** yang dipakai berulang dari P7 sampai P16. Hardware mempunyai dua jalur plant:
+**Khusus P8, P12, dan P16:** `TugasVideo.md` diganti dengan `Project.md`.
 
-1. **Pemanas air:** input temperatur low-voltage, output logika SSR, hardware enable/interlock.
-2. **Motor DC:** L293D, PWM dua arah, encoder quadrature A/B.
+---
 
-Spesifikasi lengkap ada di [`HARDWARE_PCB_SPEC.md`](HARDWARE_PCB_SPEC.md). Daftar program yang wajib dijalankan tiap pertemuan ada di [`RUN_CHECKLIST.md`](RUN_CHECKLIST.md).
+## 3. Hardware trainer
 
-### Konvensi pin default
-| Fungsi | Arduino Mega |
-|---|---:|
-| Motor CW / L293D input-A PWM | D5 |
-| Motor CCW / L293D input-B PWM | D6 |
-| Encoder A | D2 |
-| Encoder B | D3 |
-| SSR control | D8 |
-| Temperature analog conditioned input | A0 |
-| MAX6675 CS (opsional) | D49 |
-| MAX6675 SO | D50 |
-| MAX6675 SCK | D52 |
+### 3.1 Jalur pemanas air
+- Arduino Mega 2560.
+- Sensor suhu analog pada `A0` sebagai baseline praktikum. Untuk thermocouple dapat diganti MAX6675/MAX31855 dan menyesuaikan fungsi pembacaan.
+- Output SSR pada `D8`.
+- Algoritma ON/OFF, hysteresis, P/PI/PID, dan time-proportional window.
+- Failsafe: output heater OFF saat sensor invalid, timeout, STOP, atau fault.
 
-## Quick start
-```bash
-git clone -b v1 https://github.com/rofiqcp/Praktikum-Dasar-SIstem-Kontrol.git
-cd Praktikum-Dasar-SIstem-Kontrol
-```
+### 3.2 Jalur motor DC
+- L293D.
+- PWM arah CW `D5`.
+- PWM arah CCW `D6`.
+- Encoder quadrature A `D2`.
+- Encoder quadrature B `D3`.
+- Kontrol speed dan position.
+- Moving average + LPF.
+- Anti-windup.
+- Hard stop software pada STOP/fault/disconnect.
+
+Lihat [`HARDWARE_PCB_SPEC.md`](HARDWARE_PCB_SPEC.md), [`WIRING.md`](WIRING.md), dan [`SAFETY.md`](SAFETY.md).
+
+---
+
+## 4. Quick start
 
 ### Python
+
 ```bash
 python -m venv .venv
-# Windows: .venv\\Scripts\\activate
-# Linux/macOS: source .venv/bin/activate
+
+# Windows
+.venv\Scripts\activate
+
+# Linux/macOS
+source .venv/bin/activate
+
 pip install -r requirements.txt
+python validate_repo.py
+```
+
+Contoh P1:
+
+```bash
 python Pertemuan-01-Dasar-Sistem-Kontrol-dan-PID/examples/control_basics.py
 ```
 
 ### MATLAB
+
+Tambahkan root repo ke path:
+
 ```matlab
-cd Pertemuan-03-Transfer-Function-Plant/examples
-plant_transfer_functions
+repo = pwd;
+addpath(genpath(repo));
 ```
 
-### Membuat file `.slx`
-Dari root repository:
+Bangun seluruh model Simulink yang disediakan oleh builder:
+
 ```matlab
 build_all_slx
 ```
-Builder akan membuat model P3, P4, P9, P11, dan P12 ke folder `models/` masing-masing. Untuk satu model saja, jalankan `build_*.m` pada folder `examples/` pertemuan terkait.
+
+Builder akan membuat `.slx` lokal dari API Simulink (`new_system`, `add_block`, `add_line`, `save_system`). Ini sengaja dipakai agar model dapat direproduksi dan tidak bergantung pada file biner yang tidak dapat diaudit.
 
 ### PlatformIO
+
+Contoh P14:
+
 ```bash
-cd Pertemuan-13-PlatformIO-ADC-RPM-Posisi-dengan-AI/examples/mega_sensors
+cd Pertemuan-14-PlatformIO-Kontrol-Suhu-GUI-AI/examples/mega_temp_pid
+pio run
+pio run -t upload
+pio device monitor -b 115200
+```
+
+Contoh P15:
+
+```bash
+cd Pertemuan-15-PlatformIO-Kontrol-Motor-GUI-AI/examples/mega_motor_pid
 pio run
 pio run -t upload
 pio device monitor -b 115200
 ```
 
 ### GUI Python
+
 ```bash
 cd Pertemuan-14-PlatformIO-Kontrol-Suhu-GUI-AI/examples/gui
 pip install -r requirements.txt
+python app.py --demo
+```
+
+Mode `--demo` memungkinkan GUI diuji tanpa Arduino. Setelah siap:
+
+```bash
 python app.py
 ```
 
-### Node.js logger tambahan
+### Node.js
+
+P16 menyediakan logger serial sederhana:
+
 ```bash
 cd Pertemuan-16-Responsi-P09-P15/examples/node_serial_logger
 npm install
 node index.js COM5 115200
 ```
 
-## Format tugas video
-Video harus memperlihatkan **pembuatan dari awal dan program benar-benar dijalankan**, bukan hanya membaca source. Minimal: identitas, teori singkat, wiring/model, source, proses build/run, hasil grafik/data, analisis karakteristik respon, kesimpulan, dan bukti file hasil.
+---
 
-## Parameter karakteristik respon
-Praktikum memakai parameter berikut bila relevan: delay time, rise time, peak time, settling time, maximum overshoot, steady-state error, serta untuk motor ditambah RMSE/tracking error bila dibutuhkan.
+## 5. Konvensi data serial
 
-## Keselamatan
-Gunakan pemanas DC low-voltage/plant trainer terisolasi untuk praktikum mahasiswa. Jika SSR mengendalikan tegangan PLN, sisi mains **tidak boleh berada pada PCB logika/breadboard mahasiswa** dan harus berada dalam enclosure terproteksi, dengan fuse/RCD, grounding, strain relief, jarak isolasi, dan commissioning oleh personel kompeten. Lihat [`SAFETY.md`](SAFETY.md).
+Firmware P13–P15 memakai protokol teks line-based 115200 baud. Detail lengkap: [`shared/protocol/SERIAL_PROTOCOL.md`](shared/protocol/SERIAL_PROTOCOL.md).
+
+Prinsipnya:
+- command: `KEY,VALUE`
+- telemetry: satu baris CSV
+- setiap firmware memiliki header/versi protokol
+- STOP harus langsung mematikan aktuator
+- GUI tidak boleh bergantung pada urutan port OS yang tetap
+
+---
+
+## 6. Struktur setiap pertemuan
+
+Setiap pertemuan minimal mempunyai:
+
+```text
+Materi.md
+Jobsheet.md
+TugasVideo.md
+```
+
+atau untuk P8/P12/P16:
+
+```text
+Materi.md
+Jobsheet.md
+Project.md
+```
+
+Folder `examples/` berisi program yang harus benar-benar dijalankan mahasiswa. Jika ada Simulink, folder `models/` berisi README dan model `.slx` dihasilkan oleh script builder `.m`.
+
+---
+
+## 7. Definition of Done praktikum
+
+Satu pertemuan dianggap selesai bila mahasiswa dapat menunjukkan:
+
+- wiring yang benar;
+- program dibuka dari awal;
+- program compile/run;
+- output atau telemetri tampil;
+- data disimpan;
+- grafik dibuat;
+- parameter respon atau hasil pengukuran dianalisis;
+- kesimpulan ditulis;
+- fault/STOP diuji untuk praktikum hardware.
+
+Gunakan [`RUN_CHECKLIST.md`](RUN_CHECKLIST.md).
+
+---
+
+## 8. Keselamatan
+
+Untuk praktikum awal, gunakan **pemanas DC tegangan rendah atau trainer terisolasi**.
+
+Jangan menghubungkan mains langsung ke breadboard, header Arduino, atau PCB logika. Jika pemanas menggunakan tegangan berbahaya, sisi mains harus dikerjakan dan diperiksa oleh dosen/teknisi kompeten dengan enclosure, fuse/MCB/RCD yang sesuai, grounding, strain relief, creepage/clearance, emergency disconnect, dan prosedur lock-out.
+
+Firmware/GUI pada repository ini **bukan pengganti proteksi hardware**.
+
+---
+
+## 9. Validasi repository
+
+Jalankan:
+
+```bash
+python validate_repo.py
+```
+
+Validator memeriksa:
+- P1–P16 ada;
+- aturan `TugasVideo.md` vs `Project.md`;
+- file program utama ada;
+- Python dapat dikompilasi;
+- `platformio.ini` ada pada P13–P15;
+- builder Simulink ada;
+- tidak ada placeholder `TODO` pada file wajib.
+
+Lihat [`TESTING.md`](TESTING.md) untuk pengujian software dan hardware.
+
+---
+
+## 10. Referensi
+
+Materi repo disusun ulang dari bahan praktikum yang diberikan, dokumentasi MATLAB/Simulink, bahan Autonics TK4S/T4RN dan DAQMaster, serta konsep umum kontrol modern/PID. Lihat [`REFERENSI_MATERI.md`](REFERENSI_MATERI.md).

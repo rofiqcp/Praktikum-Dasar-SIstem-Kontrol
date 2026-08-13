@@ -1,1 +1,8 @@
-{"name":"pdsk-node-serial-logger","version":"1.0.0","private":true,"type":"module","dependencies":{"serialport":"^12.0.0"}}
+{
+  "name": "pdsk-p16-serial-logger",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {"start": "node index.js"},
+  "dependencies": {"serialport": "^13.0.0"}
+}

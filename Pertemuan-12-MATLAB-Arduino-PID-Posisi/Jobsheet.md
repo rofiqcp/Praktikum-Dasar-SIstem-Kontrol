@@ -1,11 +1,24 @@
-# Pertemuan 12 — Jobsheet — PID Position
+# Jobsheet Pertemuan 12
 
+## A. Safety
+- lepaskan beban berbahaya;
+- set MAXPWM rendah;
+- pastikan ruang gerak mekanik cukup.
 
-1. Pastikan mekanisme aman bergerak dua arah.
-2. Zero encoder pada posisi tengah yang aman.
-3. Uji setpoint +90°, kembali 0°, lalu -90° atau range yang sesuai trainer.
-4. Tuning Kp dengan Ki/Kd 0.
-5. Tambah Kd bila overshoot besar.
-6. Tambah Ki hanya bila ada steady offset/friction dan tetap gunakan anti-windup.
-7. Simpan grafik SP, position, RPM, error, P/I/D/PID.
-8. Ulangi minimal tiga kali untuk repeatability.
+## B. Zero
+Kirim `ZERO,1`.
+
+## C. Target
+Uji +90°, 0°, -90°.
+
+## D. PID
+Mulai PD/P: Ki=0, tune Kp, tambah Kd, tambah Ki bila perlu.
+
+## E. MATLAB
+`matlab_position_pid_experiment.m`.
+
+## F. Project
+Ikuti `Project.md`.
+
+## Expected result
+Target sudut positif/negatif tercapai tanpa hard-stop dan STOP mematikan kedua arah.

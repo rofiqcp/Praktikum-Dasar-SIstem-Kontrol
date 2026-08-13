@@ -1,60 +1,46 @@
+from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Simulasi diskrit sederhana agar alur PID terlihat jelas.
-# Plant orde-1: dy/dt = (-y + K*u) / tau
-K = 1.0
-tau = 2.0
-sp = 1.0
-kp, ki, kd = 2.0, 0.8, 0.15
-umin, umax = 0.0, 2.0
-Ts = 0.01
-Tend = 20.0
+DT = 0.05
+T_END = 40.0
+SP = 50.0
+PLANT_K = 1.0
+TAU = 5.0
+KP = 2.0
+KI = 0.35
+KD = 0.20
+U_MIN = 0.0
+U_MAX = 100.0
 
-
-def simulate(mode="PID"):
-    t = np.arange(0.0, Tend + Ts, Ts)
+def simulate_open_loop(duty=50.0):
+    t = np.arange(0.0, T_END + DT, DT)
     y = np.zeros_like(t)
-    u = np.zeros_like(t)
-    integral = 0.0
-    e_prev = sp - y[0]
-
     for k in range(1, len(t)):
-        e = sp - y[k - 1]
-        derivative = (e - e_prev) / Ts
+        dy = (-y[k - 1] + PLANT_K * duty) / TAU
+        y[k] = y[k - 1] + DT * dy
+    return t, y
 
-        p_term = kp * e if "P" in mode else 0.0
-        i_candidate = integral + e * Ts if "I" in mode else 0.0
-        i_term = ki * i_candidate if "I" in mode else 0.0
-        d_term = kd * derivative if "D" in mode else 0.0
+def simulate_pid():
+    t = np.arange(0.0, T_END + DT, DT)
+    y = np.zeros_like(t); u = np.zeros_like(t)
+    pterm=np.zeros_like(t);iterm=np.zeros_like(t);dterm=np.zeros_like(t)
+    integral=0.0;prev_y=0.0
+    for k in range(1,len(t)):
+        e=SP-y[k-1];p=KP*e;d=-KD*(y[k-1]-prev_y)/DT
+        candidate_i=integral+KI*e*DT;raw_candidate=p+candidate_i+d
+        high=raw_candidate>U_MAX;low=raw_candidate<U_MIN
+        if (not high and not low) or (high and e<0) or (low and e>0): integral=candidate_i
+        raw=p+integral+d;u[k]=np.clip(raw,U_MIN,U_MAX);pterm[k],iterm[k],dterm[k]=p,integral,d
+        dy=(-y[k-1]+PLANT_K*u[k])/TAU;prev_y=y[k-1];y[k]=y[k-1]+DT*dy
+    return t,y,u,pterm,iterm,dterm
 
-        u_unsat = p_term + i_term + d_term
-        u[k] = np.clip(u_unsat, umin, umax)
-
-        # Conditional integration anti-windup:
-        # integral hanya diterima jika tidak memperparah saturasi.
-        if "I" in mode:
-            saturating_high = u_unsat > umax and e > 0
-            saturating_low = u_unsat < umin and e < 0
-            if not (saturating_high or saturating_low):
-                integral = i_candidate
-
-        y_dot = (-y[k - 1] + K * u[k]) / tau
-        y[k] = y[k - 1] + Ts * y_dot
-        e_prev = e
-
-    return t, y, u
-
-
-plt.figure(figsize=(10, 5))
-for mode in ["P", "PI", "PID"]:
-    t, y, _ = simulate(mode)
-    plt.plot(t, y, label=mode)
-plt.axhline(sp, linestyle="--", label="Setpoint")
-plt.xlabel("Time (s)")
-plt.ylabel("Output")
-plt.title("Perbandingan P, PI, dan PID pada plant orde-1")
-plt.grid(True)
-plt.legend()
-plt.tight_layout()
-plt.show()
+def main():
+    out=Path(__file__).resolve().parent/'output';out.mkdir(exist_ok=True)
+    t,y_ol=simulate_open_loop(50.0);tc,y,u,p,i,d=simulate_pid()
+    fig,ax=plt.subplots(2,1,figsize=(10,8),sharex=True)
+    ax[0].plot(t,y_ol,label='Open-loop PV');ax[0].plot(t,np.full_like(t,SP),'--',label='SP');ax[0].set_ylabel('PV');ax[0].grid(True);ax[0].legend()
+    ax[1].plot(tc,y,label='Closed-loop PV');ax[1].plot(tc,np.full_like(tc,SP),'--',label='SP');ax[1].plot(tc,u,label='Control %',alpha=.8);ax[1].set_xlabel('Time (s)');ax[1].set_ylabel('PV / Control');ax[1].grid(True);ax[1].legend()
+    fig.suptitle(f'PID basics Kp={KP}, Ki={KI}, Kd={KD}');fig.tight_layout();png=out/'pid_basics.png';fig.savefig(png,dpi=160)
+    print(f'Saved {png}');print(f'Final PV={y[-1]:.3f}, final error={SP-y[-1]:.3f}')
+if __name__=='__main__': main()

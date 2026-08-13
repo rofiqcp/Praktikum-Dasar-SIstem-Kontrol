@@ -1,13 +1,54 @@
-# Pertemuan 09 — Jobsheet — PID Suhu MATLAB–Arduino
+# Jobsheet Pertemuan 9
 
+## A. Sensor
+Jalankan pembacaan A0 tanpa heater. Bandingkan dengan thermometer referensi.
 
-1. Kalibrasi A0 terhadap alat ukur referensi.
-2. Jalankan `matlab_temp_pid.m` dengan output SSR **dummy LED dulu**.
-3. Verifikasi duty 0, 25, 50, 100% pada indikator.
-4. Set over-temperature limit yang aman.
-5. Sambungkan plant heater yang disetujui.
-6. Mulai gain kecil; log SP, PV, P, I, D, PID, SSR.
-7. Simpan CSV dan grafik.
-8. Bandingkan dengan data Autonics P5/P6.
+Catat minimal 3 titik kalibrasi.
 
-**Stop segera** jika sensor invalid atau temperatur melewati limit.
+## B. SSR dummy
+Sebelum heater aktual, gunakan LED/dummy input SSR. Pastikan script STOP mematikan D8.
+
+## C. PID MATLAB host
+Edit:
+- COM;
+- Kp/Ki/Kd;
+- SP;
+- `MAX_TEMP_C`.
+
+Run:
+```matlab
+matlab_temp_pid_host
+```
+
+## D. Variasi
+Lakukan P, PI, PID. Jangan ubah terlalu banyak parameter sekaligus.
+
+## E. Analisis
+CSV dan PNG disimpan otomatis. Gunakan `shared/matlab/response_metrics.m`.
+
+## Pertanyaan
+1. Mengapa window SSR jauh lebih lambat daripada PWM motor?
+2. Apa yang terjadi bila sensor membaca NaN?
+3. Mengapa PID host tidak cocok untuk loop motor cepat?
+4. Bandingkan Autonics vs Arduino Mega.
+
+## Bukti yang harus dikumpulkan
+- screenshot/terminal bahwa program utama benar-benar dijalankan;
+- source/model yang digunakan;
+- tabel parameter dan satuan;
+- grafik atau output pengukuran;
+- minimal satu variasi parameter dan analisisnya;
+- kesimpulan yang menghubungkan teori dengan hasil.
+
+## Expected result
+PV mengikuti SP dengan SSR time-proportional dan data eksperimen tersimpan.
+
+## Troubleshooting wajib dipahami
+Mulai dengan heater dummy/low-voltage. Jangan menaikkan setpoint sebelum sensor dan batas maksimum terverifikasi.
+
+## Pertanyaan sebelum selesai
+1. Variabel apa yang menjadi setpoint, process value, error dan control output pada percobaan ini?
+2. Apa satuan setiap sinyal utama?
+3. Bagian mana yang paling membatasi akurasi/respons?
+4. Bagaimana Anda membuktikan hasil bukan kebetulan atau salah skala?
+5. Apa kondisi aman yang harus terjadi bila program dihentikan?

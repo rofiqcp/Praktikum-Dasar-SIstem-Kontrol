@@ -1,21 +1,53 @@
-# Safety — Praktikum Sistem Kontrol
+# Safety / Keselamatan Praktikum
 
 ## Prinsip utama
-1. Praktikum mahasiswa berfokus pada **sisi kontrol low-voltage** Arduino, sensor, encoder, L293D, dan input SSR.
-2. Pemanas yang disarankan adalah pemanas DC bertegangan rendah atau plant trainer yang sudah terisolasi.
-3. Bila menggunakan beban AC/mains, bagian tersebut harus berupa modul terpisah tertutup dan tidak diakses saat bertegangan.
-4. Tombol emergency stop / master enable harus memutus energi aktuator, bukan hanya menghentikan program.
-5. Motor harus memiliki batas mekanik aman untuk praktikum posisi; jangan membiarkan PID mendorong mekanisme ke hard-stop tanpa pembatas arus/command.
 
-## Checklist sebelum ON
-- catu Arduino dan catu motor/heater sesuai rating;
-- common ground hanya pada sisi low-voltage yang memang dirancang common;
-- polaritas sensor benar;
-- output SSR default OFF saat reset;
-- PWM motor default 0;
-- tidak ada kabel terbuka pada bagian berbahaya;
-- setpoint dan gain dimulai kecil;
-- logging berjalan sehingga perilaku abnormal dapat dianalisis.
+Repository ini mengendalikan aktuator nyata. Program yang terlihat benar tetap dapat menghasilkan gerakan motor, panas, arus besar, dan kondisi tak terduga akibat sensor lepas atau wiring salah.
 
-## Stop condition
-Hentikan percobaan bila sensor tidak valid, temperatur melewati limit lab, motor macet, driver terlalu panas, arus berlebih, encoder tidak berubah saat motor bergerak, atau arah feedback salah.
+## Pemanas air
+
+Untuk mahasiswa, gunakan heater DC low-voltage atau trainer terisolasi bila memungkinkan.
+
+Jika sistem menggunakan mains:
+- jangan sambungkan mains ke breadboard;
+- enclosure harus tertutup;
+- gunakan proteksi arus dan kebocoran yang sesuai instalasi;
+- grounding protektif harus benar;
+- sisi mains dan low-voltage harus memiliki creepage/clearance yang sesuai;
+- konektor tidak boleh dapat tersentuh saat energized;
+- commissioning dilakukan dosen/teknisi kompeten;
+- sediakan pemutus daya fisik yang dapat dijangkau;
+- jangan mengandalkan software sebagai satu-satunya proteksi over-temperature.
+
+Tambahkan thermal fuse/thermostat independen untuk plant aktual.
+
+## Motor DC
+
+- Mulai dengan supply rendah dan batas PWM kecil.
+- Pastikan mekanik tidak dapat mengenai tangan/kabel.
+- Lepas beban saat commissioning awal.
+- STOP software harus diuji sebelum tuning PID.
+- Cabut supply motor sebelum mengubah wiring encoder/driver.
+- L293D memiliki batas arus; jangan dipakai untuk motor yang melebihi rating perangkat.
+
+## Failsafe software wajib
+
+Firmware P14/P15 menerapkan:
+- actuator OFF saat boot;
+- RUN harus diberikan eksplisit;
+- sensor invalid → fault;
+- timeout command/host → STOP bila mode membutuhkan host;
+- output PID disaturasi;
+- integral anti-windup;
+- arah motor tidak pernah aktif bersamaan.
+
+Proteksi software ini hanya lapisan tambahan, bukan pengganti proteksi hardware.
+
+## Prosedur fault test
+
+Sebelum eksperimen PID:
+1. Start pada output rendah.
+2. Tekan STOP dari GUI → aktuator harus OFF.
+3. Putus sensor → sistem harus fault/STOP.
+4. Tutup GUI/putus serial → periksa perilaku aman.
+5. Restart Arduino → output harus tetap OFF sampai RUN.

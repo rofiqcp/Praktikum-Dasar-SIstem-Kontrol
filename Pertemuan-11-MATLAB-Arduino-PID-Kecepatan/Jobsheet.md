@@ -1,13 +1,50 @@
-# Pertemuan 11 — Jobsheet — PID Speed
+# Jobsheet Pertemuan 11
 
+## 1. Verifikasi P10
+RPM + dan - harus benar.
 
-1. Pastikan P10 two-direction test lolos.
-2. Upload firmware bridge yang sama.
-3. Edit port, PPR, Kp/Ki/Kd, SP pada `pid_speed_matlab.m`.
-4. Uji SP +100 RPM lalu -100 RPM (sesuaikan plant).
-5. Plot SP, RPM, error, P, I, D, PID.
-6. Uji Kp saja, PI, PID.
-7. Catat saturasi dan anti-windup.
-8. Simpan CSV.
+## 2. Upload
+`arduino_speed_pid.ino`.
 
-Jangan lanjut tuning bila tanda feedback salah atau motor menuju arah yang tak aman.
+Set `COUNTS_PER_REV`.
+
+## 3. MATLAB
+Run `matlab_speed_pid_experiment.m`.
+
+Script mengirim:
+`RUN, SP, KP, KI, KD, MAXPWM`.
+
+## 4. Eksperimen
+- +100 RPM;
+- 0;
+- -100 RPM;
+- P;
+- PI;
+- PID.
+
+## 5. Wajib
+Uji STOP saat motor berputar. Kedua PWM harus nol.
+
+## Analisis
+Grafik SP, RPM, error, P/I/D, PID PWM. Hitung response metrics untuk step positif dan negatif secara terpisah.
+
+## Bukti yang harus dikumpulkan
+- screenshot/terminal bahwa program utama benar-benar dijalankan;
+- source/model yang digunakan;
+- tabel parameter dan satuan;
+- grafik atau output pengukuran;
+- minimal satu variasi parameter dan analisisnya;
+- kesimpulan yang menghubungkan teori dengan hasil.
+
+## Expected result
+Motor mengikuti SP positif/negatif dan grafik error/P/I/D/PWM tersedia.
+
+## Troubleshooting wajib dipahami
+Jika positif jalan tetapi negatif tidak, periksa mapping signed command, PWM CW/CCW, arah encoder dan limit output secara end-to-end.
+
+## Pertanyaan sebelum selesai
+1. Variabel apa yang menjadi setpoint, process value, error dan control output pada percobaan ini?
+2. Apa satuan setiap sinyal utama?
+3. Bagian mana yang paling membatasi akurasi/respons?
+4. Bagaimana Anda membuktikan hasil bukan kebetulan atau salah skala?
+5. Apa kondisi aman yang harus terjadi bila program dihentikan?

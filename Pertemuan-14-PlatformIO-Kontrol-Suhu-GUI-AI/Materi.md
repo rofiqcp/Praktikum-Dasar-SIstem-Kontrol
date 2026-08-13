@@ -1,17 +1,30 @@
-# Pertemuan 14 — PlatformIO Arduino Mega Kontrol Suhu + GUI Lengkap + AI
+# Pertemuan 14 — PlatformIO Arduino Mega PID Suhu + GUI Python + AI
 
-
-## Tujuan
-Menjalankan PID temperatur sepenuhnya di Arduino Mega, mengatur parameter melalui serial, memonitor GUI Python, menyimpan CSV dan JPG, serta menghitung karakteristik respon.
+P14 adalah implementasi lengkap jalur temperature: firmware embedded + GUI commissioning + logging + metrik.
 
 ## Arsitektur
-`A0 temperature -> PID 10 Hz -> time-proportional SSR D8 -> heater` di MCU. PC hanya GUI/config/logger, sehingga controller tetap berjalan bila plotting lambat. Fail-safe komunikasi dapat dikembangkan sesuai trainer.
+`Sensor A0 -> PID MCU -> 0..100% -> time window -> D8 SSR`, dengan GUI Python untuk telemetry/commands.
 
-## Telemetry
-Firmware mengirim: time, temp, SP, error, P, I, D, PID%, SSR. GUI menampilkan live plot dan menyimpan data.
+## Firmware
+Fitur: output OFF saat boot, setpoint/gain serial, PID anti-windup, derivative on measurement, SSR time-proportional, over-temperature, invalid sensor fault, heartbeat timeout, explicit RUN, fault clear, telemetry CSV.
 
-## Command serial
-`RUN,1`, `RUN,0`, `SP,50`, `KP,6`, `KI,0.08`, `KD,8`, `ZEROI`.
+## GUI
+Fitur: refresh/select port, connect/disconnect, `--demo`, SP/Kp/Ki/Kd/Tmax/window, Start/Stop, dua live graph, status fault, CSV/XLSX/JPG, response metrics, heartbeat.
 
-## AI workflow
-Gunakan AI untuk memperbaiki UX/fitur, bukan mengganti validasi hardware. Setiap prompt harus diikuti build/test. Simpan history perubahan penting pada laporan.
+## Sensor
+Baseline LM35 A0. Jika sensor lain, ubah `readTemperatureC()` dan lakukan kalibrasi sebelum PID.
+
+## Heartbeat
+Saat RUN, GUI mengirim `PING,1`. Jika host hilang, firmware mematikan heater dan membuat fault timeout.
+
+## Demo mode
+```bash
+python examples/gui/app.py --demo
+```
+GUI mensimulasikan plant orde satu sehingga UI/logging dapat diuji tanpa hardware.
+
+## AI
+AI boleh membantu refactor/UI, tetapi safety requirement tidak boleh dihapus. Compile dan test dummy load sebelum plant aktual.
+
+## Hasil yang diharapkan
+GUI demo/hardware, fault, heartbeat, live plot dan export CSV/XLSX/JPG bekerja.

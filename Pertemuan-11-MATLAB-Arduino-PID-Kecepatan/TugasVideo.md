@@ -1,4 +1,15 @@
-# Pertemuan 11 — Tugas Video — PID Kecepatan Motor DC
+# Tugas Video Pertemuan 11
 
+- loop PID speed;
+- signed PWM;
+- anti-windup;
+- filter RPM;
+- forward/reverse;
+- upload firmware;
+- MATLAB mengubah SP/gain;
+- grafik SP/RPM/error/P/I/D/PID;
+- uji STOP;
+- analisis respon.
 
-Tunjukkan alur feedback speed, kode PID MATLAB, command serial ke Arduino, anti-windup, demo setpoint positif dan negatif, grafik SP/RPM/error/P/I/D/PID, serta analisis tuning.
+## Format bukti video
+Video harus memperlihatkan proses, bukan hanya hasil akhir. Sertakan source, CSV/PNG, parameter, uji arah positif/negatif, dan demonstrasi STOP/host-timeout.

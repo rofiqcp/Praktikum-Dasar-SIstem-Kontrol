@@ -1,20 +1,41 @@
-# Pertemuan 02 — Jobsheet — MATLAB dari Nol
+# Jobsheet Pertemuan 2
 
+## Percobaan 1 — Variable dan vector
+Buat `t=0:0.01:5`, sine 1 Hz, cosine 2 Hz.
 
-## Percobaan
-1. Jalankan `examples/matlab_basics.m` per bagian.
-2. Buat vector waktu 0–10 s dengan Ts 0.01 s.
-3. Buat sinyal sinus 1 Hz dan noise kecil.
-4. Plot raw dan moving-average sederhana.
-5. Buat matriks 2×2, hitung determinant dan inverse.
-6. Panggil function `saturate.m` untuk membatasi data ke -1…1.
-7. Buat table `time,signal`, simpan ke CSV, lalu baca ulang dengan `readtable`.
+## Percobaan 2 — Matrix
+Selesaikan SPL:
+`2x+y=5`, `x-3y=-1`.
 
-## Latihan kontrol
-Simulasikan respon diskrit first-order: `y(k)=y(k-1)+Ts/tau*(-y(k-1)+K*u(k))`. Gunakan input step dan plot hasil.
+## Percobaan 3 — Function
+Gunakan `saturate(300,-255,255)`.
 
-## Output
-- file `.m`;
-- satu CSV;
-- minimal dua grafik;
-- jawaban beda `*` dan `.*`, `^` dan `.^`.
+## Percobaan 4 — Plot
+Buat satu figure berisi dua kurva, label, legend, grid.
+
+## Percobaan 5 — Table
+Buat table `time`, `setpoint`, `pv`; simpan CSV lalu baca kembali.
+
+## Wajib
+Jalankan `matlab_basics.m` tanpa error dan lampirkan screenshot output.
+
+## Bukti yang harus dikumpulkan
+- screenshot/terminal bahwa program utama benar-benar dijalankan;
+- source/model yang digunakan;
+- tabel parameter dan satuan;
+- grafik atau output pengukuran;
+- minimal satu variasi parameter dan analisisnya;
+- kesimpulan yang menghubungkan teori dengan hasil.
+
+## Expected result
+Workspace berisi variabel latihan; figure muncul; CSV dapat ditulis/dibaca kembali.
+
+## Troubleshooting wajib dipahami
+Bedakan `*` dengan `.*`, `^` dengan `.^`, dan perhatikan indexing MATLAB dimulai dari 1.
+
+## Pertanyaan sebelum selesai
+1. Variabel apa yang menjadi setpoint, process value, error dan control output pada percobaan ini?
+2. Apa satuan setiap sinyal utama?
+3. Bagian mana yang paling membatasi akurasi/respons?
+4. Bagaimana Anda membuktikan hasil bukan kebetulan atau salah skala?
+5. Apa kondisi aman yang harus terjadi bila program dihentikan?

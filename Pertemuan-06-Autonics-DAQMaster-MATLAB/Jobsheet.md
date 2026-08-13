@@ -1,20 +1,56 @@
-# Pertemuan 06 — Jobsheet — DAQMaster → CSV → MATLAB
+# Jobsheet Pertemuan 6
 
+## A. Connect DAQMaster
+Catat:
+- model controller;
+- unit address;
+- baud;
+- parity;
+- stop bit;
+- converter.
 
-1. Hubungkan controller dan converter RS485 yang disediakan lab.
-2. Pastikan address/baud/parity sesuai konfigurasi trainer.
-3. Buka DAQMaster, scan/add device, tampilkan PV dan SV.
-4. Tambahkan line graph.
-5. Aktifkan logging CSV sebelum RUN.
-6. Lakukan run ON/OFF minimal 3 hysteresis.
-7. Lakukan run PID sesuai skenario dosen.
-8. Simpan file tanpa mengubah data mentah.
-9. Copy salah satu CSV menjadi `sample_data/daq_export.csv`.
-10. Edit mapping kolom di `analyze_daqmaster.m`, lalu jalankan.
-11. Ekspor grafik dan tabel metrik.
+Ambil screenshot PV/SV.
 
-## Troubleshooting
-- tidak connect: periksa COM, address, baud, parity, stop bit, wiring A/B;
-- data kosong: pastikan tag PV/SV dipilih dan logging aktif;
-- MATLAB `readtable` salah delimiter: cek separator CSV pada editor teks;
-- waktu berupa datetime: konversi ke seconds dari waktu awal.
+## B. Logging
+Pilih cycle logging yang masuk akal untuk plant termal (misalnya 0.5–2 s, mengikuti kemampuan setup).
+
+Simpan CSV.
+
+## C. MATLAB
+```matlab
+analyze_daqmaster('hasil.csv')
+```
+
+Output:
+- graph;
+- metrics;
+- file PNG.
+
+## D. Python alternatif
+```bash
+python examples/analyze_daqmaster.py hasil.csv
+```
+
+## E. Analisis
+Bandingkan data manual P5 dengan DAQ P6: sampling, peak, settling, jumlah data, error operator.
+
+## Bukti yang harus dikumpulkan
+- screenshot/terminal bahwa program utama benar-benar dijalankan;
+- source/model yang digunakan;
+- tabel parameter dan satuan;
+- grafik atau output pengukuran;
+- minimal satu variasi parameter dan analisisnya;
+- kesimpulan yang menghubungkan teori dengan hasil.
+
+## Expected result
+CSV DAQMaster dapat dibaca dan menghasilkan grafik/metrik yang bisa dibandingkan dengan P5.
+
+## Troubleshooting wajib dipahami
+Jika kolom tidak terbaca, ekspor CSV sederhana dan identifikasi nama kolom time/PV/SV. Samakan baud/parity/address dengan controller.
+
+## Pertanyaan sebelum selesai
+1. Variabel apa yang menjadi setpoint, process value, error dan control output pada percobaan ini?
+2. Apa satuan setiap sinyal utama?
+3. Bagian mana yang paling membatasi akurasi/respons?
+4. Bagaimana Anda membuktikan hasil bukan kebetulan atau salah skala?
+5. Apa kondisi aman yang harus terjadi bila program dihentikan?

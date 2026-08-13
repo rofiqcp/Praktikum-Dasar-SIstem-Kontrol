@@ -1,23 +1,54 @@
-# Pertemuan 08 — Project — Responsi 1–7 + Milestone PCB
+# Project P8 — PCB Control Trainer Checkpoint
 
+## Deliverable wajib
+1. schematic;
+2. PCB layout;
+3. BOM;
+4. Gerber;
+5. foto top/bottom;
+6. pin map;
+7. continuity checklist;
+8. low-voltage power test;
+9. I/O bring-up log.
 
-## Bagian A — Responsi individual (60%)
-- 20% konsep kontrol/PID;
-- 15% MATLAB/TF;
-- 10% Autonics/data;
-- 15% MATLAB–Arduino live modification.
+## Acceptance tests
 
-## Bagian B — Checkpoint PCB (40%)
-- 10% schematic benar dan readable;
-- 10% layout/DRC/BOM;
-- 10% bring-up low-voltage;
-- 10% dokumentasi revisi dan keselamatan.
+### 1. Power OFF
+- [ ] VCC-GND tidak short.
+- [ ] D5→PWM_CW.
+- [ ] D6→PWM_CCW.
+- [ ] D2→ENC_A.
+- [ ] D3→ENC_B.
+- [ ] D8→SSR_OUT.
+- [ ] A0→TEMP_ADC.
+- [ ] A1→AUX_ADC.
 
-### Demo minimum
-1. Arduino terdeteksi;
-2. A0 dapat berubah;
-3. D8 dummy output bekerja;
-4. D5/D6 waveform/LED test bekerja;
-5. encoder header/wiring terverifikasi atau count test bila motor tersedia.
+### 2. Power ON low-voltage
+- [ ] Arduino USB terdeteksi.
+- [ ] tidak ada komponen panas abnormal.
+- [ ] rail sesuai.
 
-**Tidak ada TugasVideo.md pada P8; hasil penilaian dicatat sebagai Project/Responsi.**
+### 3. I/O
+Gunakan program `examples/pcb_bringup/pcb_bringup.ino`.
+
+Command serial:
+- `LED`
+- `ADC`
+- `ENC`
+- `CW,50`
+- `CCW,50`
+- `STOP`
+- `SSR,1`
+- `SSR,0`
+
+Pada tahap ini motor/heater aktual boleh diganti dummy LED/load.
+
+## Kriteria gagal langsung
+- short power;
+- polaritas salah;
+- output aktif saat boot;
+- D5 dan D6 aktif bersamaan;
+- SSR aktif saat reset tanpa command.
+
+## Bukti
+Satu PDF laporan project + folder source desain + foto/video singkat pengujian.

@@ -1,24 +1,46 @@
-# Pertemuan 13 — Pengenalan PlatformIO + AI — ADC, RPM, Posisi
+# Pertemuan 13 — PlatformIO Arduino Mega: ADC, RPM, Posisi, dan Workflow AI
 
+## 1. Tujuan
+Berpindah dari workflow MATLAB/Arduino ke firmware C++ yang dibangun dengan VS Code + PlatformIO. Mahasiswa harus memahami source yang dihasilkan AI, bukan hanya copy-paste.
 
-## Tujuan
-Berpindah dari controller yang bergantung PC ke firmware Arduino Mega yang dibangun di VS Code + PlatformIO. AI editor digunakan sebagai asisten, tetapi mahasiswa wajib memahami setiap perubahan dan menguji hardware.
+## 2. PlatformIO
+Project minimal:
+```text
+platformio.ini
+src/main.cpp
+```
 
-## Tool
-- VS Code + PlatformIO extension;
-- Python 3.10+ + extension;
-- opsional Cursor/Windsurf/Copilot sesuai kebijakan lab;
-- Serial Monitor 115200.
+Target:
+```ini
+platform = atmelavr
+board = megaatmega2560
+framework = arduino
+```
 
-## Struktur PlatformIO
-`platformio.ini`, `src/main.cpp`. Build: `pio run`; upload: `pio run -t upload`; monitor: `pio device monitor -b 115200`.
+## 3. I/O P13
+- A1: ADC potensiometer;
+- D2/D3: encoder;
+- serial: 115200.
 
-## Firmware sensor
-- ADC A0;
-- encoder interrupt A/B;
-- count → angle;
-- delta count/time → RPM;
-- telemetry CSV via serial.
+Firmware menghitung ADC raw, voltage, encoder count, position_deg, rpm_raw, rpm_ma, rpm_lpf.
 
-## Penggunaan AI yang benar
-Prompt harus menyebut board, pin, satuan, sample time, format serial, batas nilai, dan output yang diinginkan. Setelah AI menghasilkan kode: compile, baca warning, uji per fungsi, dan dokumentasikan bug/perbaikan. Jangan menerima kode yang mengganti tanda encoder dengan `abs()` hanya agar grafik terlihat positif.
+## 4. Interrupt encoder
+ISR harus singkat, tidak `Serial.print`, tidak `delay`, dan hanya update state/count. Data `long` dibaca main loop dalam critical section.
+
+## 5. Timing
+Gunakan `millis()` dan non-blocking scheduling. Hindari `delay()` di loop telemetry.
+
+## 6. AI coding workflow
+AI boleh dipakai untuk menjelaskan code, membuat fungsi, review bug, membuat test, dan refactor. Praktikan wajib menulis requirement, pin map, review output, compile, test fitur bertahap, simpan prompt, dan memahami setiap perubahan.
+
+## 7. Debug checklist
+Jika RPM salah: cek CPR, arah A/B, bounce/noise, Ts, integer/float division. Jika position lompat: cek wiring, pull-up, ISR state table, noise.
+
+## Program wajib
+`examples/mega_io_monitor`.
+
+## Hasil yang diharapkan
+`pio run` sukses dan serial memuat ADC, voltage, count, degree, RPM raw/MA/LPF.
+
+## Validasi dan troubleshooting
+AI output wajib di-compile. ISR harus singkat; akses count 32-bit harus atomik pada AVR 8-bit.

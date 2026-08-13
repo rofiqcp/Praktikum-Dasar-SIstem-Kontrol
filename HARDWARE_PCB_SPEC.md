@@ -1,61 +1,107 @@
-# Spesifikasi Project PCB — Arduino Mega Control Trainer
+# Spesifikasi Project PCB Trainer — Arduino Mega 2560
 
 ## 1. Tujuan
-Membuat shield/PCB trainer yang dapat dipakai untuk **kontrol temperatur pemanas air** dan **kontrol motor DC kecepatan/posisi** dari MATLAB maupun firmware PlatformIO.
 
-## 2. Arsitektur
-### Jalur temperatur
-- Arduino Mega 2560.
-- Input temperatur utama: `A0` untuk sensor/transmitter low-voltage terkondisi 0–5 V.
-- Header opsional termokopel digital/MAX6675: CS D49, SO D50, SCK D52.
-- Output SSR: D8 melalui rangkaian driver yang sesuai input SSR.
-- LED indikator SSR dan hardware enable.
-- Konektor plant heater low-voltage; bila SSR mengendalikan mains, terminal mains **tidak ditempatkan di PCB logika mahasiswa**.
+Satu shield/trainer dipakai sepanjang semester untuk dua plant:
 
-### Jalur motor DC
-- L293D atau footprint/socket kompatibel.
-- D5 = PWM CW, D6 = PWM CCW.
-- D2 = Encoder A, D3 = Encoder B.
-- Enable driver dapat ditarik HIGH melalui jumper atau pin terpisah.
-- Supply motor terpisah dari 5 V logic, tetapi ground low-voltage disatukan sesuai desain.
-- Header encoder dengan VCC, GND, A, B.
-- Dioda flyback bila driver/varian IC yang digunakan memerlukannya sesuai datasheet.
+1. **Temperature control**: sensor suhu → Arduino Mega → SSR → heater.
+2. **DC motor control**: encoder → Arduino Mega → L293D → motor.
 
-## 3. I/O tambahan yang direkomendasikan
-- potensiometer A1 untuk manual setpoint;
-- push button START/STOP;
-- LED status RUN/FAULT;
-- test point 5V, GND, A0, D5, D6, D8, encoder A/B;
-- konektor UART0 USB/serial tetap bebas untuk komunikasi PC.
+PCB berada pada sisi **low-voltage control**. Sisi mains, jika dipakai, diletakkan pada modul terpisah yang sudah terproteksi.
 
-## 4. Deliverable project
-1. block diagram;
-2. schematic;
-3. perhitungan resistor/driver dasar;
-4. BOM;
-5. PCB layout + DRC;
-6. Gerber dan drill;
-7. assembly;
-8. continuity test tanpa power;
-9. bring-up low-voltage;
-10. demo LED/ADC, motor manual, encoder, SSR low-voltage;
-11. demo PID suhu, speed, dan position;
-12. laporan perubahan/revisi.
+## 2. Minimum I/O
 
-## 5. Milestone
-- **P1:** briefing dan pembagian fungsi.
-- **P7:** komunikasi MATLAB–Arduino dan I/O dasar.
-- **P8:** review schematic/layout + bring-up.
-- **P9–P12:** validasi kontrol menggunakan MATLAB.
-- **P13–P15:** validasi firmware PlatformIO + GUI.
-- **P16:** responsi dan demo end-to-end.
+| Net | Pin |
+|---|---|
+| MOTOR_PWM_CW | D5 |
+| MOTOR_PWM_CCW | D6 |
+| ENC_A | D2 |
+| ENC_B | D3 |
+| SSR_OUT | D8 |
+| TEMP_ADC | A0 |
+| AUX_ADC | A1 |
+| LED_STATUS | D13 |
 
-## 6. Kriteria lulus hardware
-- tidak short;
-- Arduino dapat diprogram;
-- A0 terbaca stabil;
-- D8 mengaktifkan indikator/SSR input dengan benar;
-- D5/D6 mampu menggerakkan motor dua arah;
-- encoder A/B menghasilkan count bertanda;
-- emergency/enable bekerja;
-- tidak ada bagian mains terbuka pada area praktikan.
+## 3. Blok PCB
+
+### 3.1 Power
+- Input 5V logic sesuai kebutuhan shield.
+- Terminal motor supply terpisah.
+- Bulk capacitor dekat driver.
+- 100 nF decoupling dekat setiap IC.
+- LED power.
+
+### 3.2 Motor
+- L293D socket/DIP atau footprint sesuai komponen.
+- Terminal motor.
+- Header encoder A/B/VCC/GND.
+- Test point PWM_CW, PWM_CCW, ENC_A, ENC_B.
+- Jangan menghubungkan dua output PWM arah secara bersamaan dalam firmware.
+
+### 3.3 Temperature
+- Header sensor analog.
+- Output logic SSR.
+- LED indikator command heater.
+- Test point TEMP_ADC dan SSR_OUT.
+- Opsi input sensor digital dapat disediakan pada header tambahan.
+
+### 3.4 Debug
+- Header UART/USB tetap dapat diakses.
+- Semua net penting diberi silkscreen.
+- Ground test point.
+- Nomor revisi PCB dan nama kelompok.
+
+## 4. Dokumen desain wajib
+
+- schematic PDF;
+- source schematic;
+- PCB layout;
+- Gerber;
+- BOM;
+- pin map;
+- foto PCB;
+- hasil continuity test;
+- hasil test power;
+- hasil test ADC;
+- hasil test encoder;
+- hasil test motor output tanpa beban;
+- hasil test SSR dengan dummy LED/load low-voltage.
+
+## 5. Acceptance test P8
+
+### Test A — visual
+Tidak ada solder bridge, polaritas komponen benar, silkscreen jelas.
+
+### Test B — continuity
+Dengan power OFF:
+- VCC ke GND tidak short;
+- pin Arduino ke net target benar;
+- terminal driver ke pin target benar.
+
+### Test C — power
+Power low-voltage:
+- rail sesuai target;
+- tidak ada komponen panas abnormal;
+- Arduino terdeteksi USB.
+
+### Test D — I/O
+- D13 blink.
+- A1 membaca potensiometer.
+- D2/D3 berubah saat encoder diputar.
+- D5/D6 dapat menghasilkan PWM ke dummy load.
+- D8 dapat mengendalikan LED/dummy SSR input.
+
+## 6. Acceptance test final P16
+
+Trainer harus menyelesaikan:
+- PID temperature;
+- speed measurement;
+- position measurement;
+- PID speed;
+- PID position;
+- GUI P14;
+- GUI P15;
+- logging;
+- fault/STOP test.
+
+Gunakan `RUN_CHECKLIST.md` dan `TESTING.md`.

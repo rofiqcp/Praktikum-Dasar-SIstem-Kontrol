@@ -1,36 +1,81 @@
-# Pertemuan 03 — MATLAB Transfer Function — Pemanas Air, Motor DC Speed, Motor DC Position
+# Pertemuan 3 — Transfer Function Plant
 
+Fokus pada tiga plant yang dipakai sepanjang semester:
+1. pemanas air;
+2. motor DC speed;
+3. motor DC position.
 
-## Capaian
-Mahasiswa dapat menurunkan/menggunakan transfer function, pole-zero, step response, dan membedakan model temperatur, speed, serta position.
+## 1. Transfer function
+Untuk kondisi awal nol:
 
-## 1. Pemanas air
-Model awal praktikum: first-order plus dead time (FOPDT):
+`G(s)=Y(s)/U(s)`
 
-`G_T(s)=K/(tau*s+1) * exp(-L*s)`
+Transfer function memudahkan analisis pole, zero, gain, time constant, dan step response.
 
-- `K`: process gain;
-- `tau`: time constant;
-- `L`: dead time.
+## 2. Pemanas air — model orde satu
+Pendekatan:
 
-Untuk simulasi rasional, delay dapat didekati Padé. Nilai contoh di source hanya untuk latihan; plant nyata harus diidentifikasi dari P5/P6/P9.
+`tau dT/dt + T = K u`
 
-## 2. Motor DC — kecepatan
-Dengan resistansi `R`, induktansi `L`, inertia `J`, damping `b`, motor constant `K`:
+sehingga:
 
-`G_w(s)=K / ((J*s+b)(L*s+R)+K^2)`
+`G_T(s)=K/(tau s+1)`
 
-Output adalah rad/s terhadap tegangan input.
+Parameter `K` dan `tau` harus diidentifikasi dari data aktual P5/P6. Nilai script hanyalah contoh pendidikan.
 
-## 3. Motor DC — posisi
-Karena `theta_dot = omega`, maka:
+## 3. Motor DC speed
+Model elektro-mekanik:
 
-`G_theta(s)=G_w(s)/s`.
+`V = L di/dt + R i + K_e omega`
 
-Tambahan integrator membuat plant posisi berbeda karakter dari speed. Karena itu gain PID speed tidak otomatis cocok untuk position.
+`J domega/dt + b omega = K_t i`
 
-## 4. Analisis MATLAB
-Gunakan `tf`, `step`, `pole`, `zero`, `dcgain`, `stepinfo`, `feedback`, `pade`.
+Transfer function speed:
 
-## 5. Identifikasi sederhana water heater
-Dari step open-loop yang stabil, estimasi kasar process gain: `K=(Delta T)/(Delta u)`. Time constant dapat diperkirakan dari waktu mencapai sekitar 63.2% perubahan keluaran setelah dead time.
+`Omega(s)/V(s)=Kt / ((J s+b)(L s+R)+Kt Ke)`
+
+## 4. Motor DC position
+Karena `theta_dot=omega`:
+
+`Theta(s)/V(s) = (Omega(s)/V(s))/s`
+
+Plant posisi memiliki integrator tambahan.
+
+## 5. Analisis
+Gunakan:
+- `tf`;
+- `step`;
+- `pole`;
+- `zero`;
+- `dcgain`;
+- `stepinfo`.
+
+## 6. Simulink
+`build_three_plants_simulink.m` membuat `models/three_control_plants.slx`.
+
+## 7. Identifikasi pemanas
+Dari step open-loop:
+- gain kira-kira `ΔT_ss/Δu`;
+- `tau` kira-kira waktu mencapai 63.2% perubahan akhir.
+
+## Program wajib
+```matlab
+plant_transfer_functions
+build_three_plants_simulink
+```
+
+## Program referensi dan urutan belajar
+Topik inti pertemuan ini adalah **transfer function tiga plant**. Program yang harus dibuka dan dipahami:
+- `plant_transfer_functions.m`
+- `compare_plants.m`
+- `build_three_plants_simulink.m`
+
+Urutan kerja yang direkomendasikan: pahami persamaan/diagram → jalankan contoh default → ubah satu parameter → catat output → jelaskan sebab perubahan → simpan bukti.
+
+## Hasil yang diharapkan
+Tiga model tampil dengan pole dan step response; builder menghasilkan model Simulink di folder models.
+
+## Validasi dan troubleshooting
+Jika `tf` atau `stepinfo` tidak dikenal, cek Control System Toolbox. Pastikan satuan parameter konsisten.
+
+Setiap hasil eksperimen harus mencatat konfigurasi, satuan, sample time/interval akuisisi, dan kondisi awal. Hasil yang “terlihat bagus” tetapi tidak dapat direproduksi belum dianggap valid.

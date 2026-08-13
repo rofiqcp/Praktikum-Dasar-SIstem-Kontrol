@@ -1,13 +1,31 @@
-# Pertemuan 14 — Jobsheet — Embedded Temperature PID + GUI
+# Jobsheet Pertemuan 14
 
+## Tahap 1 — GUI demo
+```bash
+cd examples/gui
+pip install -r requirements.txt
+python app.py --demo
+```
+Start, ubah SP/gain, Save. Pastikan CSV/XLSX/JPG terbentuk.
 
-1. Build/upload `examples/mega_temp_pid`.
-2. Uji serial command dan dummy LED pada D8.
-3. Kalibrasi `TEMP_OFFSET` dan `TEMP_SCALE`.
-4. Jalankan GUI `examples/gui/app.py`.
-5. Connect, set SP/Kp/Ki/Kd, Start.
-6. Pantau dua grafik: PV/SP dan PID components/output.
-7. Save CSV dan JPG.
-8. Hitung/print response metrics dari data.
-9. Uji STOP dan sensor/temperature limit.
-10. Lakukan satu pengembangan dengan AI dan dokumentasikan test.
+## Tahap 2 — firmware
+```bash
+cd ../mega_temp_pid
+pio run
+pio run -t upload
+```
+
+## Tahap 3 — sensor
+Heater OFF: cek suhu, bandingkan thermometer, test sensor invalid.
+
+## Tahap 4 — dummy SSR
+Test Start/Stop pada LED/dummy SSR.
+
+## Tahap 5 — plant
+Setpoint aman. Tune P→PI→PID.
+
+## Tahap 6 — fault
+Disconnect GUI saat RUN → OFF setelah timeout; over-temperature → fault; sensor invalid → fault; restart MCU → output OFF.
+
+## Data wajib
+SP, PV, error, P, I, D, PID%, SSR, fault.
