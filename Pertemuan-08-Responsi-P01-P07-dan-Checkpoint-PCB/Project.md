@@ -1,54 +1,120 @@
 # Project P8 — PCB Control Trainer Checkpoint
 
+## Tujuan project P8
+P8 adalah design-review gate. Tujuannya memastikan schematic, layout, BOM, pin map, assembly evidence, dan hasil pemeriksaan low-voltage sudah cukup rapi sebelum trainer dipakai pada pertemuan berikutnya.
+
 ## Deliverable wajib
-1. schematic;
-2. PCB layout;
+1. schematic source + PDF/image;
+2. PCB layout source + screenshot;
 3. BOM;
-4. Gerber;
-5. foto top/bottom;
-6. pin map;
-7. continuity checklist;
-8. low-voltage power test;
-9. I/O bring-up log.
+4. Gerber/fabrication output;
+5. pin map;
+6. foto top/bottom bila board sudah dirakit;
+7. `PCB_REVIEW_CHECKLIST.md` terisi;
+8. continuity/inspection log;
+9. bring-up log dari prosedur laboratorium;
+10. issue list + corrective action;
+11. README singkat revisi PCB.
 
-## Acceptance tests
+## Pin map baseline
+| Fungsi | Pin |
+|---|---|
+| encoder A | D2 |
+| encoder B | D3 |
+| motor command A | D5 |
+| motor command B | D6 |
+| temperature control output | D8 |
+| temperature analog input | A0 |
+| auxiliary analog input | A1 |
 
-### 1. Power OFF
-- [ ] VCC-GND tidak short.
-- [ ] D5→PWM_CW.
-- [ ] D6→PWM_CCW.
-- [ ] D2→ENC_A.
-- [ ] D3→ENC_B.
-- [ ] D8→SSR_OUT.
-- [ ] A0→TEMP_ADC.
-- [ ] A1→AUX_ADC.
+Jika ada revisi resmi, lampirkan tabel perubahan dan pastikan schematic, source, label PCB, serta dokumentasi menggunakan mapping yang sama.
 
-### 2. Power ON low-voltage
-- [ ] Arduino USB terdeteksi.
-- [ ] tidak ada komponen panas abnormal.
-- [ ] rail sesuai.
+## Review schematic
+- [ ] semua connector diberi nama;
+- [ ] semua IC mempunyai reference designator;
+- [ ] supply/net label jelas;
+- [ ] pin Arduino yang dipakai sesuai tabel;
+- [ ] input analog dapat ditelusuri sampai connector/test point;
+- [ ] encoder A/B dapat ditelusuri;
+- [ ] output digital dapat ditelusuri;
+- [ ] tidak ada net penting yang menggantung tanpa alasan;
+- [ ] nilai komponen sesuai BOM;
+- [ ] catatan desain/revisi tersedia.
 
-### 3. I/O
-Gunakan program `examples/pcb_bringup/pcb_bringup.ino`.
+## Review layout
+- [ ] footprint sesuai komponen;
+- [ ] orientation marker jelas;
+- [ ] connector mudah diidentifikasi;
+- [ ] test point dapat diakses;
+- [ ] reference designator tidak menutupi pad penting;
+- [ ] net class dan clearance mengikuti aturan desain yang digunakan;
+- [ ] tidak ada unrouted net;
+- [ ] ground/supply routing ditinjau;
+- [ ] file fabrication berhasil dihasilkan.
 
-Command serial:
-- `LED`
-- `ADC`
-- `ENC`
-- `CW,50`
-- `CCW,50`
-- `STOP`
-- `SSR,1`
-- `SSR,0`
+## Review assembly
+- [ ] visual inspection top/bottom;
+- [ ] tidak ada solder bridge yang terlihat;
+- [ ] polaritas/orientasi komponen diperiksa;
+- [ ] connector tidak tertukar;
+- [ ] board dibersihkan dan diberi label revisi;
+- [ ] setiap temuan diberi ID issue.
 
-Pada tahap ini motor/heater aktual boleh diganti dummy LED/load.
+## Review continuity dan low-voltage
+Pemeriksaan dilakukan sesuai SOP laboratorium. Catat hasil pass/fail, alat ukur, tanggal, dan operator. Project P8 tidak mengajarkan modifikasi instalasi daya berbahaya.
 
-## Kriteria gagal langsung
-- short power;
-- polaritas salah;
-- output aktif saat boot;
-- D5 dan D6 aktif bersamaan;
-- SSR aktif saat reset tanpa command.
+## Issue severity
+- **Minor**: dokumentasi/label/rapi yang tidak mengubah fungsi dasar.
+- **Major**: kesalahan yang dapat membuat fungsi I/O tidak sesuai.
+- **Hold**: kondisi yang membuat board tidak boleh dilanjutkan ke pengujian berikutnya sampai diperbaiki.
 
-## Bukti
-Satu PDF laporan project + folder source desain + foto/video singkat pengujian.
+## Tabel issue/action
+| ID | Area | Temuan | Severity | Corrective action | PIC | Evidence close | Status |
+|---|---|---|---|---|---|---|---|
+| PCB-01 | | | | | | | |
+
+## Acceptance gate
+### PASS
+Tidak ada issue Major/Hold terbuka dan dokumentasi lengkap.
+
+### PASS WITH ACTIONS
+Ada action minor yang tidak menghalangi tahap berikutnya, dengan PIC dan due action jelas.
+
+### HOLD
+Ada issue Major/Hold yang belum terselesaikan atau bukti review tidak cukup.
+
+## Penilaian project
+| Komponen | Bobot |
+|---|---:|
+| schematic dan pin-map consistency | 25% |
+| layout dan fabrication package | 20% |
+| BOM/assembly documentation | 15% |
+| inspection dan test evidence | 20% |
+| issue handling/corrective action | 10% |
+| kemampuan menjelaskan desain | 10% |
+
+## Struktur folder pengumpulan
+```text
+P08_Project_NIM_Nama/
+  schematic/
+  pcb/
+  gerber/
+  bom/
+  photos/
+  test-log/
+  issue-list/
+  README.md
+```
+
+## README project minimal
+- versi/revisi PCB;
+- tanggal;
+- pin map;
+- daftar fungsi;
+- status PASS/PASS WITH ACTIONS/HOLD;
+- issue terbuka;
+- perubahan sejak P1;
+- rencana menuju P9–P15.
+
+## Kriteria akhir
+Project P8 dinyatakan siap lanjut hanya setelah reviewer dapat menelusuri hubungan `requirement -> schematic -> PCB -> pin map -> evidence` tanpa menebak.
