@@ -1,37 +1,70 @@
-# Tugas Video Pertemuan 2
+# Tugas Video Pertemuan 2 — Dasar MATLAB
 
-Jelaskan dan praktikkan dari awal:
-- Command Window, Workspace, Editor;
-- scalar/vector/matrix;
-- indexing;
-- element-wise operation;
-- if/for;
-- function;
-- plot/legend/grid;
-- table, CSV;
-- jalankan `matlab_basics.m`;
-- modifikasi satu bagian dan jelaskan hasilnya.
+## Durasi
+Disarankan 6–10 menit.
 
-## Format bukti video
-Video harus memperlihatkan **proses**, bukan hanya hasil akhir:
-1. identitas, tujuan dan diagram sistem;
-2. teori inti beserta persamaan/satuan yang dipakai;
-3. source/model dibuat atau dibuka dan bagian penting dijelaskan;
-4. program di-run/compile/upload di layar;
-5. hardware atau simulasi menghasilkan data;
-6. minimal satu parameter diubah dan pengaruhnya dibandingkan;
-7. grafik/tabel dibahas menggunakan istilah respons sistem;
-8. error/fault atau satu kasus troubleshooting dijelaskan;
-9. kesimpulan menyebut parameter terbaik dan alasannya.
+## Tujuan
+Mahasiswa menunjukkan kemampuan menggunakan MATLAB, bukan hanya menampilkan hasil akhir.
 
-### File pendamping
-Sertakan source, data mentah, hasil plot dan tabel parameter. Nama file gunakan `NIM_Nama_P02_...` agar mudah diperiksa.
+## Isi wajib
 
-### Kriteria penilaian yang disarankan
-- pemahaman konsep 25%;
-- prosedur dan program benar 25%;
-- bukti running/hardware 20%;
-- analisis data 20%;
-- kerapian dan kesimpulan 10%.
+### 1. Workspace dan variabel
+Tunjukkan `who`, `whos`, scalar, vector, dan matrix. Jelaskan perbedaan scalar, vector, dan matrix.
 
-**Expected result:** Workspace berisi variabel latihan; figure muncul; CSV dapat ditulis/dibaca kembali.
+### 2. Operator dan indexing
+Demonstrasikan:
+- `*` dan `.*`;
+- indexing awal/akhir;
+- logical indexing;
+- satu contoh `A\b`.
+
+### 3. Program wajib
+Jalankan dan jelaskan minimal tiga file:
+
+```matlab
+run('examples/matlab_basics.m')
+run('examples/vector_matrix_lab.m')
+run('examples/plotting_and_data.m')
+run('examples/first_order_euler.m')
+```
+
+### 4. Plot dan data
+Tunjukkan:
+- figure dengan title/label/grid;
+- file CSV yang dihasilkan;
+- proses membaca kembali CSV menggunakan `readtable`.
+
+### 5. Simulasi orde satu
+Jelaskan secara singkat:
+- pengaruh `K` terhadap nilai akhir;
+- pengaruh `tau` terhadap kecepatan respon;
+- hubungan simulasi Euler dengan materi P3.
+
+### 6. Challenge
+Tampilkan satu challenge dari Jobsheet dan jelaskan source-nya.
+
+### 7. Kesimpulan
+Sebutkan minimal lima kemampuan MATLAB yang sekarang sudah dikuasai.
+
+## Rubrik
+
+| Komponen | Bobot |
+|---|---:|
+| Workspace, vector, matrix, indexing | 20% |
+| Operator dan function | 20% |
+| Plot dan pengolahan data | 20% |
+| Program Euler dan interpretasi | 25% |
+| Challenge, alur, dan kejelasan | 15% |
+
+## Bukti wajib terlihat
+- source `.m`;
+- Command Window saat run;
+- figure hasil;
+- CSV hasil;
+- minimal satu perubahan parameter yang dibuat sendiri.
+
+## Format nama
+
+```text
+P02_NIM_Nama_DasarMATLAB
+```
