@@ -1,0 +1,3 @@
+# Worksheet Analisis P12
+
+Dokumentasikan metadata dataset, CPR, reference zero, sample interval, target, Kp/Ki/Kd, output limit, response metrics, grafik setpoint/position, error, P/I/D, repeatability, serta kesimpulan. Bandingkan P, PD, PID, target positif/negatif, dan minimal dua dataset target yang sama. Jelaskan wrapped vs unwrapped position, pengaruh CPR, saturation, backlash, dan reproducibility.
