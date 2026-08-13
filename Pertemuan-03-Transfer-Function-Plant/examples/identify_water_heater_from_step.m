@@ -1,2 +1,3 @@
-% Wrapper praktikum P3: identifikasi data step orde satu.
-run('identify_first_order.m');
+%% P03 compatibility entry point
+baseDir=fileparts(mfilename('fullpath'));
+run(fullfile(baseDir,'identify_first_order.m'));
