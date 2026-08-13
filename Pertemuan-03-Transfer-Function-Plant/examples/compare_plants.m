@@ -1,5 +1,6 @@
 clear; clc; close all;
-run('plant_transfer_functions.m');
+thisDir = fileparts(mfilename('fullpath'));
+run(fullfile(thisDir,'plant_transfer_functions.m'));
 
 fprintf('\n=== Ringkasan model ===\n');
 fprintf('Heater DC gain : %.4f\n',dcgain(Gth));
