@@ -1,51 +1,145 @@
-# Jobsheet Pertemuan 10
+# Jobsheet Pertemuan 10 — Encoder, RPM, dan Posisi
 
-## A. Upload sketch
-`examples/arduino_encoder_stream/arduino_encoder_stream.ino`.
+## Tujuan
+Memvalidasi encoder quadrature dan menghasilkan feedback count, position, serta RPM yang benar sebelum digunakan pada P11/P12.
 
-## B. Tentukan CPR
-1. reset count;
-2. putar tepat 1 revolusi;
-3. baca count;
-4. ulangi 3x;
-5. tetapkan CPR.
-
-## C. Arah
-Putar CW/CCW. Verifikasi signed.
-
-## D. MATLAB
-```matlab
-matlab_monitor_encoder
+## File
+```text
+examples/arduino_encoder_stream/arduino_encoder_stream.ino
+examples/matlab_monitor_encoder.m
+examples/cpr_calibration.m
+examples/encoder_math_offline.m
+examples/analyze_encoder_log.m
+examples/quadrature_state_test.py
 ```
 
-## E. Motor
-Setelah pembacaan tangan benar, baru hidupkan motor dengan driver/PWM rendah.
+## A. Pre-test
+Jelaskan PPR, CPR, x4 decoding, rumus posisi, rumus RPM, dan alasan tanda arah harus konsisten.
 
-## Data wajib
-count, position_deg, rpm_raw, rpm_MA, rpm_LPF.
+## B. Offline state test
+```bash
+python examples/quadrature_state_test.py
+```
 
-## Pertanyaan
-- mengapa RPM raw noisy?
-- bagaimana Ts mempengaruhi resolusi?
-- apa pengaruh gearbox?
+Catat sequence state untuk arah positif dan negatif serta fungsi nilai 0 pada lookup table.
 
-## Bukti yang harus dikumpulkan
-- screenshot/terminal bahwa program utama benar-benar dijalankan;
-- source/model yang digunakan;
-- tabel parameter dan satuan;
-- grafik atau output pengukuran;
-- minimal satu variasi parameter dan analisisnya;
-- kesimpulan yang menghubungkan teori dengan hasil.
+## C. Verifikasi telemetry
+Gunakan sketch P10 pada trainer laboratorium. Header yang diharapkan:
+
+```text
+#PROTO,ENCODER_STREAM,1
+#ms,count,position_deg,rpm_raw,rpm_ma,rpm_lpf
+```
+
+Pastikan baris numerik mempunyai enam kolom.
+
+## D. Kalibrasi CPR
+Catat count awal/akhir untuk beberapa revolusi referensi.
+
+| Trial | Revolutions | Start | End | Delta | CPR estimate |
+|---:|---:|---:|---:|---:|---:|
+| 1 | | | | | |
+| 2 | | | | | |
+| 3 | | | | | |
+| 4 | | | | | |
+| 5 | | | | | |
+
+Masukkan data ke `examples/cpr_calibration.m` dan jalankan:
+
+```matlab
+run('examples/cpr_calibration.m')
+```
+
+Catat apakah CPR mengacu pada motor shaft atau output gearbox.
+
+## E. Validasi posisi
+Gunakan referensi mekanik yang tersedia pada trainer dan bandingkan dengan:
+
+```text
+position_deg = count/CPR*360
+```
+
+Catat minimal satu perubahan positif dan satu negatif. Evaluasi error skala dan tanda.
+
+## F. MATLAB monitor
+Sesuaikan port lalu:
+
+```matlab
+run('examples/matlab_monitor_encoder.m')
+```
+
+Simpan data yang memiliki segmen positif, diam, dan negatif.
+
+## G. Sample interval
+Hitung:
+
+```text
+DeltaRPM = 60/(CPR*dt)
+```
+
+Bandingkan minimal dua nilai `dt` secara analitis atau menggunakan dataset. Jelaskan tradeoff latency vs quantization.
+
+## H. Filter comparison
+Bandingkan:
+
+| Sinyal | Noise | Delay | Catatan |
+|---|---|---|---|
+| rpm_raw | | | |
+| rpm_ma | | | |
+| rpm_lpf | | | |
+
+Jelaskan mengapa sinyal paling halus belum tentu paling baik untuk feedback loop cepat.
+
+## I. Offline math
+```matlab
+run('examples/encoder_math_offline.m')
+```
+
+Verifikasi hubungan count, degree, delta count, `dt`, dan RPM.
+
+## J. Analisis log
+```matlab
+run('examples/analyze_encoder_log.m')
+```
+
+Laporan minimal:
+- count vs time;
+- position vs time;
+- raw/MA/LPF RPM;
+- statistik sample interval;
+- min/max RPM;
+- tanda arah.
+
+## K. Pertanyaan
+1. Mengapa CPR diukur beberapa revolusi?
+2. Bagaimana gearbox memengaruhi CPR pada output shaft?
+3. Apa akibat CPR dua kali terlalu besar?
+4. Mengapa raw RPM bertingkat pada speed rendah?
+5. Mengapa moving average menambah delay?
+6. Apa arti alpha LPF?
+7. Mengapa posisi unwrapped berguna untuk P12?
+8. Apa akibat sign convention yang berbeda antara sensor dan controller?
+9. Mengapa timestamp harus diperiksa?
+10. Bukti apa yang diperlukan sebelum sensor dinyatakan siap untuk PID?
+
+## Deliverable
+```text
+NIM_Nama_P10/
+  firmware/
+  matlab/
+  raw/
+  results/
+  laporan.pdf
+```
+
+## Acceptance
+- [ ] count bertanda benar;
+- [ ] CPR terverifikasi;
+- [ ] posisi sesuai skala;
+- [ ] RPM positif/negatif terbaca;
+- [ ] raw/MA/LPF dapat dijelaskan;
+- [ ] log tersimpan;
+- [ ] konvensi arah terdokumentasi.
 
 ## Expected result
-Count dan posisi bertanda benar; raw/MA/LPF RPM berubah sesuai arah dan kecepatan.
-
-## Troubleshooting wajib dipahami
-Jika arah salah, verifikasi kanal A/B dan konvensi mekanik; jangan membalik tanda di satu bagian saja tanpa audit jalur kontrol.
-
-## Pertanyaan sebelum selesai
-1. Variabel apa yang menjadi setpoint, process value, error dan control output pada percobaan ini?
-2. Apa satuan setiap sinyal utama?
-3. Bagian mana yang paling membatasi akurasi/respons?
-4. Bagaimana Anda membuktikan hasil bukan kebetulan atau salah skala?
-5. Apa kondisi aman yang harus terjadi bila program dihentikan?
+Feedback encoder tervalidasi dari sisi skala, waktu, filtering, dan tanda sehingga layak menjadi input P11/P12.
