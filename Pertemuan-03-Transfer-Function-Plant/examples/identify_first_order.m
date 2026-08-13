@@ -1,0 +1,16 @@
+clear; clc; close all;
+t=(0:20:660)';
+u=zeros(size(t)); u(t>=20)=0.6;
+y0=25; Ktrue=35; tauTrue=120;
+y=y0*ones(size(t)); idx=t>=20;
+y(idx)=y0+Ktrue*0.6.*(1-exp(-(t(idx)-20)/tauTrue));
+k=find(diff(u)~=0,1,'first')+1;
+yInf=mean(y(end-2:end));
+Kest=(yInf-y(k))/(u(k)-u(k-1));
+target=y(k)+0.632*(yInf-y(k));
+kTau=find(y>=target & t>=t(k),1,'first');
+tauEst=t(kTau)-t(k);
+fprintf('K estimate = %.3f\n',Kest);
+fprintf('tau estimate = %.1f s\n',tauEst);
+figure; plot(t,y,'o-'); hold on; yline(target,'--'); grid on;
+xlabel('Time (s)'); ylabel('Output'); title('First-order identification');
