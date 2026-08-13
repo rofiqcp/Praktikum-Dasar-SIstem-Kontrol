@@ -1,73 +1,73 @@
-# Jobsheet Pertemuan 5
+# Jobsheet Pertemuan 5 — Data Manual Temperature Controller
 
-## Persiapan
-- [ ] volume air dicatat;
-- [ ] suhu awal dicatat;
-- [ ] sensor terpasang;
-- [ ] setpoint diset aman;
-- [ ] stopwatch siap;
-- [ ] template Excel dibuka;
-- [ ] emergency disconnect diketahui.
+## Tujuan
+Mahasiswa membuat dataset manual yang dapat dibandingkan, kemudian menghitung karakteristik respon menggunakan Excel, Python, dan MATLAB.
 
-## A. ON/OFF
-Set SV, kemudian lakukan tiga hysteresis berbeda.
+## A. Siapkan lembar kerja
+Gunakan copy dari `templates/template_pengamatan_pemanas_air.xlsx`. Isi metadata sebelum pengamatan: ID run, mode, target, nilai awal, interval pencatatan, kondisi plant, dan parameter yang diberikan pengajar.
 
-Setiap run:
-1. tunggu kondisi awal yang ditetapkan;
-2. start stopwatch saat control RUN;
-3. catat PV setiap 10 s;
-4. lanjutkan sampai steady atau waktu maksimum dosen;
-5. STOP;
-6. simpan file berbeda.
-
-## B. PID
-Lakukan minimal:
-- P;
-- PI;
-- PID.
-
-Catat parameter persis.
-
-## C. Analisis
-Ekspor sheet menjadi CSV dengan kolom yang kompatibel:
+## B. Dataset baseline
+Catat kolom minimum:
 
 ```text
-time_s,setpoint_C,temp_C
+time_s,setpoint_C,temperature_C,notes
 ```
 
-Jalankan:
+Gunakan waktu aktual. Jika satu sampel terlewat, tandai sebagai missing; jangan membuat nilai pengganti.
 
+## C. Dataset perbandingan
+Buat minimal tiga dataset dengan satu parameter eksperimen yang berbeda. Semua variabel lain didokumentasikan agar perbandingan dapat dipertanggungjawabkan.
+
+| Run | Mode | Parameter | PV awal | SV | Interval | Catatan |
+|---|---|---|---:|---:|---:|---|
+| A | | | | | | |
+| B | | | | | | |
+| C | | | | | | |
+
+## D. Repeatability
+Ulangi salah satu konfigurasi. Periksa apakah bentuk respon dan metrics cukup mirip.
+
+## E. Analisis Python
 ```bash
-python examples/analyze_manual_data.py data.csv
+python examples/analyze_manual_response.py data_run.csv
+python examples/compare_manual_runs.py runA.csv runB.csv runC.csv
 ```
 
-## Tabel perbandingan
-Run, mode, HYS/Kp/Ki/Kd, rise, overshoot, settling, SSE.
+## F. Analisis MATLAB
+```matlab
+run('examples/analyze_manual_response.m')
+```
 
-## Pertanyaan
-1. Hysteresis mana yang paling stabil?
-2. Apa tradeoff hysteresis vs frekuensi switching?
-3. Apa pengaruh Ki?
-4. Apakah suhu awal mempengaruhi fairness perbandingan?
-5. Apakah sampling manual 10 s cukup menangkap peak?
+## G. Tabel hasil
+| Run | Rise | Peak | Overshoot | Settling | SSE | Jumlah sampel |
+|---|---:|---:|---:|---:|---:|---:|
+| A | | | | | | |
+| B | | | | | | |
+| C | | | | | | |
 
-## Bukti yang harus dikumpulkan
-- screenshot/terminal bahwa program utama benar-benar dijalankan;
-- source/model yang digunakan;
-- tabel parameter dan satuan;
-- grafik atau output pengukuran;
-- minimal satu variasi parameter dan analisisnya;
-- kesimpulan yang menghubungkan teori dengan hasil.
+## H. Analisis wajib
+1. Run mana yang paling cepat menuju target?
+2. Run mana yang memiliki overshoot terbesar?
+3. Apakah interval pencatatan manual cukup untuk mengukur peak?
+4. Seberapa konsisten run repeatability?
+5. Apa sumber ketidakpastian terbesar dari pencatatan stopwatch?
+6. Mengapa metadata kondisi awal penting?
+7. Apa manfaat logging digital yang akan digunakan pada P6?
 
-## Expected result
-Tabel stopwatch lengkap, grafik PV-SV dan metrik respons tersedia.
+## I. Troubleshooting data
+- Header CSV harus konsisten.
+- Waktu harus monoton naik.
+- PV/SV harus numerik dan memiliki satuan.
+- Missing sample dicatat, bukan disembunyikan.
+- Jika run berbeda jauh, periksa metadata sebelum membuat kesimpulan.
 
-## Troubleshooting wajib dipahami
-Jangan mengubah volume air/daya heater di tengah perbandingan. Catat kondisi awal dan interval stopwatch.
+## Deliverable
+1. seluruh raw data;
+2. tabel metadata;
+3. grafik setiap run;
+4. grafik perbandingan;
+5. response metrics;
+6. jawaban analisis;
+7. video sesuai `TugasVideo.md`.
 
-## Pertanyaan sebelum selesai
-1. Variabel apa yang menjadi setpoint, process value, error dan control output pada percobaan ini?
-2. Apa satuan setiap sinyal utama?
-3. Bagian mana yang paling membatasi akurasi/respons?
-4. Bagaimana Anda membuktikan hasil bukan kebetulan atau salah skala?
-5. Apa kondisi aman yang harus terjadi bila program dihentikan?
+Praktikum menggunakan setup laboratorium yang telah disiapkan. Perubahan instalasi daya bukan bagian dari jobsheet ini.
