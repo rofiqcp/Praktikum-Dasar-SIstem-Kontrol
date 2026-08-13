@@ -1,44 +1,103 @@
 # Project P12 — PID Posisi Motor DC
 
 ## Tujuan
-Membuktikan PCB trainer dapat melakukan closed-loop position dua arah dengan bukti data terukur.
+Membuktikan bahwa PCB trainer dan perangkat lunak pendukung mampu menghasilkan data kontrol posisi dua arah yang dapat dianalisis, dijelaskan, dan direproduksi.
 
-## Deliverable
-- firmware;
-- MATLAB logger;
-- parameter CPR;
-- wiring;
-- step +90, -90, dan target lain;
-- CSV;
-- PNG;
-- Kp/Ki/Kd;
+## Berkas yang dikumpulkan
+- source firmware yang digunakan;
+- MATLAB logger/analyzer;
+- nilai CPR dan shaft referensi;
+- diagram koneksi yang sesuai dengan trainer;
+- data target positif, target negatif, dan satu target tambahan;
+- raw CSV;
+- grafik PNG;
+- nilai Kp, Ki, dan Kd;
 - response metrics;
-- fault/STOP demonstration.
+- `WORKSHEET_ANALISIS.md` yang telah diisi;
+- bukti penanganan kondisi berhenti dan timeout sesuai workflow praktikum.
 
-## Acceptance
-- [ ] zero dapat dilakukan;
-- [ ] +target bergerak arah benar;
-- [ ] -target bergerak arah benar;
-- [ ] PWM CW/CCW tidak aktif bersamaan;
-- [ ] STOP mematikan motor;
+## Metadata setiap pengujian
+Setiap dataset harus menyimpan atau mendokumentasikan:
+- nama file;
+- tanggal/waktu;
+- CPR;
+- referensi nol;
+- target posisi;
+- Kp, Ki, Kd;
+- batas output;
+- interval sampling;
+- posisi awal;
+- kondisi beban;
+- catatan kejadian penting selama pengujian.
+
+## Kriteria penerimaan
+- [ ] referensi nol dijelaskan dan dicatat;
+- [ ] target positif menghasilkan data dengan tanda yang konsisten;
+- [ ] target negatif menghasilkan data dengan tanda yang konsisten;
+- [ ] tidak ada ketidaksesuaian skala antara count, CPR, dan posisi;
 - [ ] error akhir dicatat;
-- [ ] overshoot dan settling dianalisis;
-- [ ] mekanik tidak mencapai hard-stop pada eksperimen normal.
+- [ ] overshoot dan settling time dianalisis;
+- [ ] kondisi saturasi dibahas;
+- [ ] repeatability dievaluasi menggunakan target yang sama lebih dari satu kali;
+- [ ] raw CSV dan grafik hasil analisis tersedia;
+- [ ] source yang menghasilkan data dapat ditunjukkan saat responsi.
 
-## Tantangan tambahan
-Buat trajectory: `0 → +90 → -90 → +45 → 0`.
+## Rangkaian target untuk analisis
+Gunakan rangkaian target konseptual:
+
+```text
+0 -> +90 -> -90 -> +45 -> 0
+```
+
+Tujuan rangkaian tersebut adalah mengevaluasi referensi, konsistensi tanda, respons pada beberapa target, dan repeatability. Response metrics dihitung per segmen target, bukan untuk seluruh rangkaian sekaligus.
 
 ## Matriks percobaan minimum
-Lakukan sekurangnya empat run: +90°, -90°, +45°, dan satu trajectory multi-target. Untuk setiap run catat Kp/Ki/Kd, MAXPWM, CPR, sample time, rise time, peak time, settling time, overshoot dan SSE.
+Lakukan sekurangnya empat dataset yang dapat dianalisis:
+
+| Dataset | Target | Kp | Ki | Kd | Batas output | Rise | Overshoot | Settling | SSE |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 1 | +90 deg | | | | | | | | |
+| 2 | -90 deg | | | | | | | | |
+| 3 | +45 deg | | | | | | | | |
+| 4 | target berulang/trajectory | | | | | | | | |
+
+Jika kondisi awal atau beban berbeda, perbedaan tersebut harus disebutkan pada analisis.
+
+## Analisis wajib
+1. Jelaskan hubungan count, CPR, dan posisi dalam derajat.
+2. Jelaskan referensi nol yang digunakan.
+3. Bandingkan respons target positif dan negatif.
+4. Bandingkan minimal dua konfigurasi controller.
+5. Jelaskan pengaruh saturasi terhadap hasil tuning.
+6. Jelaskan apakah integral diperlukan untuk mengurangi error residual.
+7. Analisis repeatability.
+8. Identifikasi minimal satu keterbatasan eksperimen.
+9. Berikan satu usulan perbaikan yang dapat diuji pada eksperimen berikutnya.
 
 ## Bukti teknis
-- screenshot upload/serial;
-- foto arah motor dan encoder;
+- screenshot proses komunikasi atau pencatatan data;
 - CSV/PNG hasil MATLAB;
 - source final;
+- tabel parameter dan satuan;
 - penjelasan anti-windup;
-- uji host timeout/STOP;
-- analisis mengapa gain yang dipilih aman terhadap hard-stop.
+- penjelasan state berhenti/timeout;
+- hasil `WORKSHEET_ANALISIS.md`;
+- kesimpulan berbasis response metrics.
 
 ## Review source saat responsi
-Praktikan harus dapat menunjukkan baris yang menghitung posisi, error, P/I/D, saturasi, PWM arah, ZERO dan STOP.
+Praktikan harus mampu menunjukkan bagian program yang menghitung atau menangani:
+- encoder count;
+- posisi;
+- setpoint dan error;
+- P, I, dan D;
+- anti-windup;
+- saturasi;
+- telemetry;
+- referensi nol;
+- state berhenti.
+
+## Kesimpulan project
+Project dinilai berhasil bila data dan source dapat menjawab tiga pertanyaan utama:
+1. Apakah posisi dihitung dengan skala dan tanda yang benar?
+2. Apakah controller dapat dijelaskan berdasarkan data, bukan hanya berdasarkan pengamatan visual?
+3. Apakah hasil dapat diulang dengan referensi dan parameter yang terdokumentasi?
