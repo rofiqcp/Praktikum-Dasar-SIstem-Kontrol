@@ -29,8 +29,8 @@ MODULES = [
 PROJECT = {8, 12, 16}
 errors: list[str] = []
 
-# These thresholds are intentionally modest. Their purpose is to catch an
-# accidentally truncated/placeholder teaching document, not to enforce style.
+# Modest minimum lengths catch accidental truncation/placeholders without
+# imposing a formatting style on the teaching material.
 MIN_MATERI = 1200
 MIN_JOBSHEET = 600
 MIN_ASSESSMENT = 250
@@ -41,10 +41,7 @@ for i, name in enumerate(MODULES, 1):
         errors.append(f"P{i:02}: missing directory {name}")
         continue
 
-    docs = {
-        "Materi.md": MIN_MATERI,
-        "Jobsheet.md": MIN_JOBSHEET,
-    }
+    docs = {"Materi.md": MIN_MATERI, "Jobsheet.md": MIN_JOBSHEET}
     expected = "Project.md" if i in PROJECT else "TugasVideo.md"
     docs[expected] = MIN_ASSESSMENT
 
@@ -71,6 +68,8 @@ required_paths = [
     "TESTING.md",
     "RUN_CHECKLIST.md",
     "SIMULINK_MODELS.md",
+    "READINESS_V1.md",
+    "CHANGELOG_V1.md",
     "build_all_slx.m",
     "shared/python/response_metrics.py",
     "shared/python/test_response_metrics.py",
@@ -78,7 +77,10 @@ required_paths = [
     "shared/matlab/response_metrics.m",
     "shared/protocol/SERIAL_PROTOCOL.md",
     "Pertemuan-03-Transfer-Function-Plant/examples/build_three_plants_simulink.m",
+    "Pertemuan-03-Transfer-Function-Plant/examples/identify_water_heater_from_step.m",
     "Pertemuan-04-PID-MATLAB-dan-Blok-Manual/examples/build_pid_manual_simulink.m",
+    "Pertemuan-06-Autonics-DAQMaster-MATLAB/examples/analyze_daqmaster.py",
+    "Pertemuan-07-MATLAB-Arduino-LED-ADC/examples/adc_logger.m",
     "Pertemuan-09-MATLAB-Arduino-Kontrol-Suhu-PID/examples/matlab_temp_pid_host.m",
     "Pertemuan-09-MATLAB-Arduino-Kontrol-Suhu-PID/examples/analyze_temp_pid_log.m",
     "Pertemuan-09-MATLAB-Arduino-Kontrol-Suhu-PID/examples/build_temp_pid_simulink.m",
@@ -87,12 +89,14 @@ required_paths = [
     "Pertemuan-10-MATLAB-Arduino-Baca-RPM-dan-Posisi/examples/analyze_encoder_log.m",
     "Pertemuan-11-MATLAB-Arduino-PID-Kecepatan/examples/arduino_speed_pid/arduino_speed_pid.ino",
     "Pertemuan-11-MATLAB-Arduino-PID-Kecepatan/examples/matlab_speed_pid_experiment.m",
+    "Pertemuan-11-MATLAB-Arduino-PID-Kecepatan/examples/pid_speed_matlab.m",
     "Pertemuan-11-MATLAB-Arduino-PID-Kecepatan/examples/analyze_speed_pid_log.m",
     "Pertemuan-11-MATLAB-Arduino-PID-Kecepatan/examples/speed_pid_simulation.m",
     "Pertemuan-11-MATLAB-Arduino-PID-Kecepatan/examples/build_motor_speed_pid_simulink.m",
     "Pertemuan-12-MATLAB-Arduino-PID-Posisi/WORKSHEET_ANALISIS.md",
     "Pertemuan-12-MATLAB-Arduino-PID-Posisi/examples/arduino_position_pid/arduino_position_pid.ino",
     "Pertemuan-12-MATLAB-Arduino-PID-Posisi/examples/matlab_position_pid_experiment.m",
+    "Pertemuan-12-MATLAB-Arduino-PID-Posisi/examples/pid_position_matlab.m",
     "Pertemuan-12-MATLAB-Arduino-PID-Posisi/examples/position_pid_offline.m",
     "Pertemuan-12-MATLAB-Arduino-PID-Posisi/examples/analyze_position_pid_log.m",
     "Pertemuan-12-MATLAB-Arduino-PID-Posisi/examples/build_motor_position_pid_simulink.m",
@@ -100,6 +104,7 @@ required_paths = [
     "Pertemuan-13-PlatformIO-ADC-RPM-Posisi-dengan-AI/examples/mega_io_monitor/platformio.ini",
     "Pertemuan-13-PlatformIO-ADC-RPM-Posisi-dengan-AI/examples/mega_io_monitor/src/main.cpp",
     "Pertemuan-13-PlatformIO-ADC-RPM-Posisi-dengan-AI/examples/python_serial_plotter/plot_serial.py",
+    "Pertemuan-14-PlatformIO-Kontrol-Suhu-GUI-AI/SOFTWARE_VALIDATION.md",
     "Pertemuan-14-PlatformIO-Kontrol-Suhu-GUI-AI/PROMPT_AI_CONTOH.md",
     "Pertemuan-14-PlatformIO-Kontrol-Suhu-GUI-AI/examples/mega_temp_pid/platformio.ini",
     "Pertemuan-14-PlatformIO-Kontrol-Suhu-GUI-AI/examples/mega_temp_pid/src/main.cpp",
@@ -111,6 +116,8 @@ required_paths = [
     "Pertemuan-15-PlatformIO-Kontrol-Motor-GUI-AI/examples/mega_motor_pid/src/main.cpp",
     "Pertemuan-15-PlatformIO-Kontrol-Motor-GUI-AI/examples/gui/app.py",
     "Pertemuan-15-PlatformIO-Kontrol-Motor-GUI-AI/examples/analyze_saved_run.py",
+    "Pertemuan-16-Responsi-P09-P15/RESPONSI_BANK_SOAL.md",
+    "Pertemuan-16-Responsi-P09-P15/FINAL_ACCEPTANCE_CHECKLIST.md",
     "Pertemuan-16-Responsi-P09-P15/examples/final_smoke_test.py",
     "Pertemuan-16-Responsi-P09-P15/examples/node_serial_logger/index.js",
     "Pertemuan-16-Responsi-P09-P15/examples/node_serial_logger/package.json",
@@ -120,8 +127,8 @@ for rel in required_paths:
     if not (ROOT / rel).is_file():
         errors.append(f"missing required program/document: {rel}")
 
-# Check source-file references written inside backticks in mandatory module
-# documentation. Generated .slx/output artifacts are deliberately excluded.
+# Check source-file references in mandatory Markdown. Generated .slx/output
+# artifacts are excluded because they are intentionally produced at runtime.
 source_suffixes = {".py", ".m", ".ino", ".cpp", ".h", ".ini", ".md", ".ipynb", ".js", ".json", ".txt"}
 ref_pattern = re.compile(r"`((?:examples|models)/[^`\s]+)")
 for i, name in enumerate(MODULES, 1):
@@ -142,8 +149,14 @@ for i, name in enumerate(MODULES, 1):
             if candidate.suffix.lower() in source_suffixes and not candidate.is_file():
                 errors.append(f"P{i:02}: broken source reference in {doc_name}: {ref}")
 
-# Guard the protocol/state fixes that are easy to regress accidentally.
+# Guard protocol/state/compatibility fixes that are easy to regress.
 source_requirements = {
+    "Pertemuan-11-MATLAB-Arduino-PID-Kecepatan/examples/pid_speed_matlab.m": [
+        "matlab_speed_pid_experiment.m"
+    ],
+    "Pertemuan-12-MATLAB-Arduino-PID-Posisi/examples/pid_position_matlab.m": [
+        "matlab_position_pid_experiment.m"
+    ],
     "Pertemuan-13-PlatformIO-ADC-RPM-Posisi-dengan-AI/examples/mega_io_monitor/src/main.cpp": [
         "#PROTO,IO_MONITOR,2", "resetEncoderEstimator", "lastCount=0"
     ],
@@ -176,7 +189,6 @@ for py in ROOT.rglob("*.py"):
     except Exception as exc:
         errors.append(f"python compile: {py.relative_to(ROOT)}: {exc}")
 
-# Detect explicit incomplete markers in teaching material and source.
 for pattern in ("*.md", "*.py", "*.cpp", "*.ino", "*.m"):
     for p in ROOT.rglob(pattern):
         if p.name == "validate_repo.py":
