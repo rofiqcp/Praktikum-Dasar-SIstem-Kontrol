@@ -1,0 +1,4 @@
+time_s,setpoint_c,temp_c,output_percent,mode,kp,ki,kd,hysteresis_c
+0,50,25,100,onoff,0,0,0,2
+10,50,27,100,onoff,0,0,0,2
+20,50,30,100,onoff,0,0,0,2

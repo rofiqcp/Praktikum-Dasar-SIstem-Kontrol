@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.xlsx
+*.csv
+*.png
+*.log
+.pio/
+.vscode/.browse_c_cpp.db*
+node_modules/
+.DS_Store
+*.asv
+slprj/
+codegen/
+*_ert_rtw/
