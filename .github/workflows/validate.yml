@@ -13,16 +13,30 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+
       - name: Structural and Python validation
         run: python validate_repo.py
-      - name: Install test dependency
+
+      - name: Install Python test dependency
         run: python -m pip install --disable-pip-version-check numpy
+
       - name: Response metrics unit test
         run: |
           cd shared/python
           python test_response_metrics.py
+
       - name: Node syntax
         run: |
-          if [ -f Pertemuan-16-Responsi-P09-P15/examples/node_serial_logger/index.js ]; then
-            node --check Pertemuan-16-Responsi-P09-P15/examples/node_serial_logger/index.js
-          fi
+          node --check Pertemuan-16-Responsi-P09-P15/examples/node_serial_logger/index.js
+
+      - name: Install PlatformIO
+        run: python -m pip install --disable-pip-version-check platformio
+
+      - name: Build P13 Arduino Mega firmware
+        run: pio run -d Pertemuan-13-PlatformIO-ADC-RPM-Posisi-dengan-AI/examples/mega_io_monitor
+
+      - name: Build P14 Arduino Mega firmware
+        run: pio run -d Pertemuan-14-PlatformIO-Kontrol-Suhu-GUI-AI/examples/mega_temp_pid
+
+      - name: Build P15 Arduino Mega firmware
+        run: pio run -d Pertemuan-15-PlatformIO-Kontrol-Motor-GUI-AI/examples/mega_motor_pid
