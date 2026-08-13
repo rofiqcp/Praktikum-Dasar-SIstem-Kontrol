@@ -1,38 +1,39 @@
 # Tugas Video Pertemuan 6
 
-Tampilkan:
-- wiring komunikasi;
-- setting communication;
-- DAQMaster menemukan device;
-- PV/SV live;
-- graph;
-- logging CSV;
-- eksperimen hysteresis;
-- eksperimen PID;
-- import MATLAB;
-- grafik dan metrik;
-- perbandingan dengan stopwatch P5.
+## Tujuan video
+Membuktikan bahwa mahasiswa memahami alur akuisisi data digital, kualitas CSV, sampling, serta perbandingan DAQMaster dengan metode manual P5.
 
-## Format bukti video
-Video harus memperlihatkan **proses**, bukan hanya hasil akhir:
-1. identitas, tujuan dan diagram sistem;
-2. teori inti beserta persamaan/satuan yang dipakai;
-3. source/model dibuat atau dibuka dan bagian penting dijelaskan;
-4. program di-run/compile/upload di layar;
-5. hardware atau simulasi menghasilkan data;
-6. minimal satu parameter diubah dan pengaruhnya dibandingkan;
-7. grafik/tabel dibahas menggunakan istilah respons sistem;
-8. error/fault atau satu kasus troubleshooting dijelaskan;
-9. kesimpulan menyebut parameter terbaik dan alasannya.
+## Isi wajib
+1. identitas dan tujuan;
+2. diagram `device -> DAQMaster -> CSV -> MATLAB/Python`;
+3. tampilkan metadata komunikasi yang digunakan laboratorium;
+4. tampilkan device/project DAQMaster dan nilai live;
+5. tampilkan trend graph dan raw CSV;
+6. jelaskan nama kolom, timestamp, satuan, dan sample interval;
+7. jalankan `examples/csv_quality_report.py`;
+8. jalankan `examples/analyze_daqmaster.py` atau analisis MATLAB;
+9. tampilkan statistik `dt min/median/max`;
+10. tunjukkan contoh missing/duplicate data bila ada dan cara mendokumentasikannya;
+11. bandingkan minimal satu run P5 dengan satu run P6;
+12. jelaskan perbedaan peak/settling bila sampling berbeda;
+13. jelaskan raw vs processed data;
+14. lakukan satu troubleshooting kasus CSV/header;
+15. kesimpulan berbasis metrics dan kualitas data.
 
-### File pendamping
-Sertakan source, data mentah, hasil plot dan tabel parameter. Nama file gunakan `NIM_Nama_P06_...` agar mudah diperiksa.
+## File pendamping
+```text
+NIM_Nama_P06_raw.csv
+NIM_Nama_P06_processed.csv
+NIM_Nama_P06_summary.csv
+NIM_Nama_P06_trend.png
+NIM_Nama_P06_P5_vs_P6.png
+```
 
-### Kriteria penilaian yang disarankan
-- pemahaman konsep 25%;
-- prosedur dan program benar 25%;
-- bukti running/hardware 20%;
-- analisis data 20%;
-- kerapian dan kesimpulan 10%.
+## Rubrik
+- pemahaman DAQ dan metadata: 20%;
+- raw data dan audit kualitas: 20%;
+- bukti program MATLAB/Python: 20%;
+- analisis sampling dan response metrics: 25%;
+- troubleshooting dan kesimpulan: 15%.
 
-**Expected result:** CSV DAQMaster dapat dibaca dan menghasilkan grafik/metrik yang bisa dibandingkan dengan P5.
+Video harus memperlihatkan proses analisis nyata, bukan hanya slide atau screenshot hasil akhir.

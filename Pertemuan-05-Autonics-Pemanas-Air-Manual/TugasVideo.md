@@ -1,38 +1,47 @@
 # Tugas Video Pertemuan 5
 
-Wajib menampilkan:
-1. plant pemanas air;
-2. Autonics dan PV/SV;
-3. cara set ON/OFF/hysteresis;
-4. stopwatch dan pencatatan manual;
-5. tiga run hysteresis;
-6. PID/time proportional;
-7. minimal P/PI/PID;
-8. file Excel;
-9. analisis Python/Excel;
-10. grafik dan karakteristik respon;
-11. prosedur STOP dan keselamatan.
+## Tujuan
+Membuktikan pemahaman metode pengamatan manual dan analisis respon temperatur.
 
-## Format bukti video
-Video harus memperlihatkan **proses**, bukan hanya hasil akhir:
-1. identitas, tujuan dan diagram sistem;
-2. teori inti beserta persamaan/satuan yang dipakai;
-3. source/model dibuat atau dibuka dan bagian penting dijelaskan;
-4. program di-run/compile/upload di layar;
-5. hardware atau simulasi menghasilkan data;
-6. minimal satu parameter diubah dan pengaruhnya dibandingkan;
-7. grafik/tabel dibahas menggunakan istilah respons sistem;
-8. error/fault atau satu kasus troubleshooting dijelaskan;
-9. kesimpulan menyebut parameter terbaik dan alasannya.
+## Isi wajib
+1. identitas dan tujuan praktikum;
+2. diagram blok sistem temperatur;
+3. jelaskan PV, SV, error, hysteresis, dan PID secara konseptual;
+4. jelaskan metadata yang harus dicatat sebelum membandingkan run;
+5. tampilkan template Excel/CSV dan arti setiap kolom;
+6. tampilkan minimal tiga dataset;
+7. tunjukkan raw data sebelum analisis;
+8. jalankan `examples/analyze_manual_response.py`;
+9. jalankan `examples/compare_manual_runs.py`;
+10. tampilkan grafik PV-SV dan grafik perbandingan;
+11. jelaskan rise time, peak, overshoot, settling time, dan steady-state error;
+12. bahas keterbatasan sampling stopwatch/missing sample;
+13. bandingkan satu run repeatability;
+14. jelaskan mengapa P6 beralih ke logging DAQMaster;
+15. tutup dengan kesimpulan berbasis angka.
 
-### File pendamping
-Sertakan source, data mentah, hasil plot dan tabel parameter. Nama file gunakan `NIM_Nama_P05_...` agar mudah diperiksa.
+## File pendamping
+```text
+NIM_Nama_P05_runA.csv
+NIM_Nama_P05_runB.csv
+NIM_Nama_P05_runC.csv
+NIM_Nama_P05_comparison.png
+NIM_Nama_P05_summary.csv
+```
 
-### Kriteria penilaian yang disarankan
-- pemahaman konsep 25%;
-- prosedur dan program benar 25%;
-- bukti running/hardware 20%;
-- analisis data 20%;
-- kerapian dan kesimpulan 10%.
+## Rubrik
+- konsep dan diagram: 20%;
+- kualitas raw data/metadata: 20%;
+- bukti program dijalankan: 20%;
+- analisis response metrics: 25%;
+- troubleshooting dan kesimpulan: 15%.
 
-**Expected result:** Tabel stopwatch lengkap, grafik PV-SV dan metrik respons tersedia.
+## Pengurangan nilai
+- hanya membaca materi tanpa menunjukkan proses;
+- raw data tidak tersedia;
+- grafik tanpa label/satuan;
+- membandingkan run yang kondisi awalnya tidak terdokumentasi;
+- menyatakan hasil “lebih bagus” tanpa angka pendukung;
+- menghapus data anomali tanpa penjelasan.
+
+Gunakan data dari setup laboratorium yang telah disiapkan. Modifikasi instalasi daya bukan bagian tugas video.

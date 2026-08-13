@@ -1,35 +1,26 @@
 # Tugas Video Pertemuan 7
 
-- install/support package;
-- detect Arduino Mega;
-- jelaskan COM;
-- blink D13;
-- wiring potensiometer;
-- baca A1;
-- plot ADC;
-- threshold ADC→LED;
-- jelaskan perbedaan loop host MATLAB dan loop embedded.
+Video wajib menunjukkan proses MATLAB–Arduino dan analisis data.
 
-## Format bukti video
-Video harus memperlihatkan **proses**, bukan hanya hasil akhir:
-1. identitas, tujuan dan diagram sistem;
-2. teori inti beserta persamaan/satuan yang dipakai;
-3. source/model dibuat atau dibuka dan bagian penting dijelaskan;
-4. program di-run/compile/upload di layar;
-5. hardware atau simulasi menghasilkan data;
-6. minimal satu parameter diubah dan pengaruhnya dibandingkan;
-7. grafik/tabel dibahas menggunakan istilah respons sistem;
-8. error/fault atau satu kasus troubleshooting dijelaskan;
-9. kesimpulan menyebut parameter terbaik dan alasannya.
+## Isi wajib
+1. identitas dan tujuan;
+2. diagram MATLAB -> USB -> Arduino Mega -> I/O;
+3. board/port dan Support Package;
+4. jalankan `connection_check.m`;
+5. jalankan `led_adc.m`;
+6. tunjukkan `adc_log.csv`;
+7. jalankan `sample_interval_analysis.m` dan jelaskan dt min/median/max;
+8. jalankan `filter_compare.m`, bandingkan raw dan MA5;
+9. jalankan `adc_calibration.m`, jelaskan `y=m*x+b`;
+10. jelaskan ADC, timestamp aktual, dan keterbatasan timing host MATLAB;
+11. tunjukkan satu troubleshooting;
+12. jelaskan kesiapan menuju P8/P9.
 
-### File pendamping
-Sertakan source, data mentah, hasil plot dan tabel parameter. Nama file gunakan `NIM_Nama_P07_...` agar mudah diperiksa.
+## Rubrik
+- setup/koneksi 20%;
+- I/O dan logging 20%;
+- analisis sampling 20%;
+- filtering/kalibrasi 25%;
+- troubleshooting/kesimpulan 15%.
 
-### Kriteria penilaian yang disarankan
-- pemahaman konsep 25%;
-- prosedur dan program benar 25%;
-- bukti running/hardware 20%;
-- analisis data 20%;
-- kerapian dan kesimpulan 10%.
-
-**Expected result:** D13 dapat dikendalikan dan A1 menghasilkan grafik tegangan 0–5 V sesuai posisi potensiometer.
+File pendamping minimal: `adc_log.csv`, grafik sample interval, grafik raw-vs-filtered, dan catatan kalibrasi.

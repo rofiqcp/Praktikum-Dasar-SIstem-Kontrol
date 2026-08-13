@@ -1,56 +1,92 @@
-# Jobsheet Pertemuan 6
+# Jobsheet Pertemuan 6 — DAQMaster dan Analisis CSV
 
-## A. Connect DAQMaster
+## Tujuan
+Mahasiswa mendokumentasikan setup akuisisi, mengaudit kualitas CSV, menganalisis data, dan membandingkan hasil digital dengan data manual P5.
+
+## A. Metadata setup
+Isi model device, address, baud, parity, stop bit, interface, port, interval logging, nama file, dan waktu eksperimen sesuai konfigurasi laboratorium.
+
+## B. Bukti DAQMaster
+Simpan screenshot project/device, nilai live, trend graph, setting logging, dan lokasi raw file.
+
+## C. Audit raw CSV
 Catat:
-- model controller;
-- unit address;
-- baud;
-- parity;
-- stop bit;
-- converter.
+- jumlah baris;
+- nama kolom;
+- format timestamp;
+- delimiter;
+- missing values;
+- duplicate timestamp;
+- satuan;
+- interval sample.
 
-Ambil screenshot PV/SV.
+Jangan mengedit raw copy.
 
-## B. Logging
-Pilih cycle logging yang masuk akal untuk plant termal (misalnya 0.5–2 s, mengikuti kemampuan setup).
+## D. Analisis sample repository
+MATLAB:
 
-Simpan CSV.
-
-## C. MATLAB
 ```matlab
-analyze_daqmaster('hasil.csv')
+analyze_daqmaster('sample_data/daq_export.csv')
 ```
 
-Output:
-- graph;
-- metrics;
-- file PNG.
+Python:
 
-## D. Python alternatif
 ```bash
-python examples/analyze_daqmaster.py hasil.csv
+python examples/analyze_daqmaster.py sample_data/daq_export.csv
+python examples/csv_quality_report.py sample_data/daq_export.csv
 ```
 
-## E. Analisis
-Bandingkan data manual P5 dengan DAQ P6: sampling, peak, settling, jumlah data, error operator.
+## E. Analisis data kelompok
+Ulangi analisis dengan CSV hasil kelompok. Jika header berbeda dari sample, dokumentasikan mapping kolom.
 
-## Bukti yang harus dikumpulkan
-- screenshot/terminal bahwa program utama benar-benar dijalankan;
-- source/model yang digunakan;
-- tabel parameter dan satuan;
-- grafik atau output pengukuran;
-- minimal satu variasi parameter dan analisisnya;
-- kesimpulan yang menghubungkan teori dengan hasil.
+## F. Statistik sampling
+Buat tabel:
 
-## Expected result
-CSV DAQMaster dapat dibaca dan menghasilkan grafik/metrik yang bisa dibandingkan dengan P5.
+| File | N | dt min | dt median | dt max | missing | duplicate |
+|---|---:|---:|---:|---:|---:|---:|
+| sample | | | | | | |
+| kelompok | | | | | | |
 
-## Troubleshooting wajib dipahami
-Jika kolom tidak terbaca, ekspor CSV sederhana dan identifikasi nama kolom time/PV/SV. Samakan baud/parity/address dengan controller.
+## G. Perbandingan run
+Gunakan `examples/compare_runs.m` atau script plot sendiri. Semua kurva wajib diberi label dan metadata.
 
-## Pertanyaan sebelum selesai
-1. Variabel apa yang menjadi setpoint, process value, error dan control output pada percobaan ini?
-2. Apa satuan setiap sinyal utama?
-3. Bagian mana yang paling membatasi akurasi/respons?
-4. Bagaimana Anda membuktikan hasil bukan kebetulan atau salah skala?
-5. Apa kondisi aman yang harus terjadi bila program dihentikan?
+## H. P5 vs P6
+Pilih satu dataset P5 dan P6 yang paling comparable. Bandingkan:
+- jumlah sampel;
+- interval waktu;
+- peak;
+- overshoot;
+- settling time;
+- steady-state error;
+- missing sample;
+- error operator/transkripsi.
+
+## Analisis wajib
+1. Mengapa jumlah sampel lebih banyak belum tentu berarti data lebih baik?
+2. Apa akibat timestamp tidak monoton?
+3. Mengapa raw file harus disimpan terpisah dari processed data?
+4. Metric mana yang paling sensitif terhadap interval sampling?
+5. Apakah kesimpulan P5 dan P6 sama?
+6. Bagaimana membuktikan proses cleaning tidak mengubah makna data?
+7. Apa keuntungan audit trail logging digital?
+
+## Troubleshooting
+- CSV error: cek delimiter/header.
+- Nama kolom berbeda: buat mapping eksplisit.
+- Timestamp datetime: konversi ke elapsed seconds.
+- Duplicate/missing: hitung dan dokumentasikan sebelum cleaning.
+- Data tidak comparable: audit kondisi awal dan metadata.
+
+## Deliverable
+1. screenshot DAQMaster;
+2. raw CSV;
+3. processed CSV bila digunakan;
+4. statistik sampling;
+5. grafik;
+6. response metrics;
+7. tabel P5-vs-P6;
+8. jawaban analisis;
+9. video P6.
+
+## Kriteria selesai
+Mahasiswa dapat menjelaskan alur `device -> DAQMaster -> CSV -> analyzer`, menunjukkan raw file, dan mempertahankan keputusan analisis berdasarkan data.
