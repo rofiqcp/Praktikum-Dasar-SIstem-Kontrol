@@ -3,12 +3,24 @@ clear; clc; close all;
 
 baseDir=fileparts(mfilename('fullpath'));
 file=fullfile(baseDir,'output','encoder.csv');
-if ~isfile(file), error('Missing %s. Run matlab_monitor_encoder.m first.',file); end
+if ~isfile(file)
+    error('Missing %s. Run matlab_monitor_encoder.m first.',file);
+end
+
 T=readtable(file);
 req={'time_s','count','position_deg','rpm_raw','rpm_ma','rpm_lpf'};
-assert(all(ismember(req,T.Properties.VariableNames)),'Unexpected encoder CSV columns.');
+assert(all(ismember(req,T.Properties.VariableNames)), ...
+    'Unexpected encoder CSV columns.');
+assert(height(T)>=2,'Encoder log must contain at least two samples.');
+assert(all(isfinite(T.time_s)),'time_s contains NaN or Inf.');
+assert(all(isfinite(T.count)),'count contains NaN or Inf.');
+assert(all(isfinite(T.position_deg)),'position_deg contains NaN or Inf.');
+assert(all(isfinite(T.rpm_raw)) && all(isfinite(T.rpm_ma)) && all(isfinite(T.rpm_lpf)), ...
+    'RPM columns contain NaN or Inf.');
 
 dt=diff(T.time_s);
+assert(all(dt>0),'time_s must be strictly increasing.');
+
 fprintf('Samples: %d\n',height(T));
 fprintf('dt min/median/max: %.6f / %.6f / %.6f s\n',min(dt),median(dt),max(dt));
 fprintf('Count range: %g .. %g\n',min(T.count),max(T.count));
@@ -21,9 +33,11 @@ figure('Color','w');
 tiledlayout(3,1);
 nexttile; plot(T.time_s,T.count);grid on;ylabel('Count');
 nexttile; plot(T.time_s,T.position_deg);grid on;ylabel('Position (deg)');
-nexttile; plot(T.time_s,T.rpm_raw,T.time_s,T.rpm_ma,T.time_s,T.rpm_lpf,'LineWidth',1.0);grid on;xlabel('Time (s)');ylabel('RPM');legend('raw','MA','LPF');
+nexttile; plot(T.time_s,T.rpm_raw,T.time_s,T.rpm_ma,T.time_s,T.rpm_lpf,'LineWidth',1.0);
+grid on;xlabel('Time (s)');ylabel('RPM');legend('raw','MA','LPF');
 
 outDir=fullfile(baseDir,'output');
+if ~exist(outDir,'dir'),mkdir(outDir);end
 exportgraphics(gcf,fullfile(outDir,'encoder_analysis.png'),'Resolution',180);
 stats=table(height(T),min(dt),median(dt),max(dt),min(T.rpm_lpf),max(T.rpm_lpf), ...
     'VariableNames',{'samples','dt_min','dt_median','dt_max','rpm_min','rpm_max'});
