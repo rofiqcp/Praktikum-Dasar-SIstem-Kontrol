@@ -4,20 +4,20 @@
 Mahasiswa mampu:
 
 1. menjelaskan encoder incremental quadrature;
-2. membaca state A/B dan menentukan arah;
-3. membedakan PPR, CPR, x1/x2/x4 decoding, dan efek gearbox;
-4. mengkalibrasi `COUNTS_PER_REV` dari pengukuran;
-5. mengubah count menjadi posisi derajat;
-6. menghitung RPM dari delta count dan sample interval;
-7. menjelaskan quantization error pada RPM;
-8. membandingkan raw RPM, moving average, dan low-pass filter;
-9. memvalidasi tanda CW/CCW end-to-end;
-10. membuat log serial untuk digunakan pada P11/P12.
+2. membaca keadaan kanal A/B dan menentukan arah;
+3. membedakan PPR, CPR, decoding x1/x2/x4, dan pengaruh gearbox;
+4. menentukan `COUNTS_PER_REV` berdasarkan hasil pengukuran;
+5. mengubah count menjadi posisi dalam derajat;
+6. menghitung RPM dari perubahan count dan interval sampling;
+7. menjelaskan quantization error pada estimasi RPM;
+8. membandingkan RPM mentah, moving average, dan low-pass filter;
+9. memvalidasi konsistensi tanda CW/CCW dari encoder sampai data MATLAB;
+10. menghasilkan log serial yang siap digunakan pada P11 dan P12.
 
 ---
 
 ## 1. Mengapa P10 dipisahkan dari PID
-P10 sengaja tidak fokus tuning controller. Sebelum closed-loop digunakan, feedback harus benar.
+P10 sengaja tidak berfokus pada tuning controller. Sebelum closed-loop digunakan, feedback harus dibuktikan benar.
 
 ```text
 encoder -> count -> CPR -> position
@@ -25,58 +25,60 @@ encoder -> count -> CPR -> position
               +-> delta count / delta time -> RPM -> filter
 ```
 
-Jika tanda, CPR, atau sampling salah, PID P11/P12 dapat terlihat gagal padahal akar masalah ada di feedback.
+Jika tanda, CPR, atau interval sampling salah, PID pada P11/P12 dapat terlihat gagal walaupun akar masalah sebenarnya berada pada feedback.
 
 ---
 
 ## 2. Encoder incremental quadrature
-Encoder A/B menghasilkan dua sinyal digital berbeda fase sekitar 90° electrical.
+Encoder kanal A dan B menghasilkan dua sinyal digital yang berbeda fase sekitar 90 derajat elektrik.
 
-State yang mungkin:
+Keadaan logika yang mungkin:
 
 ```text
 00, 01, 11, 10
 ```
 
-Satu arah menghasilkan urutan tertentu; arah berlawanan menghasilkan urutan terbalik. Firmware memakai lookup table 4-state sehingga illegal transition dapat menghasilkan delta 0.
+Satu arah putaran menghasilkan urutan keadaan tertentu, sedangkan arah sebaliknya menghasilkan urutan yang terbalik. Firmware menggunakan lookup table empat-keadaan sehingga transisi yang tidak valid dapat diabaikan dengan menghasilkan perubahan count sebesar 0.
 
 Baseline pin:
 - `ENC_A = D2`;
 - `ENC_B = D3`.
 
-D2 dan D3 pada Arduino Mega mendukung external interrupt sehingga edge dapat dicatat tanpa polling loop yang lambat.
+D2 dan D3 pada Arduino Mega mendukung external interrupt sehingga perubahan kanal dapat dicatat tanpa bergantung pada polling loop utama.
 
 ---
 
-## 3. PPR vs CPR
-Istilah vendor berbeda-beda sehingga angka datasheet harus dibaca hati-hati.
+## 3. PPR dan CPR
+Istilah pada datasheet vendor tidak selalu seragam sehingga angka spesifikasi harus dibaca dengan hati-hati.
 
-- **PPR** dapat berarti pulse per revolution per channel;
-- **CPR** pada praktikum berarti jumlah **count hasil decoder** untuk satu putaran pada shaft yang dipakai sebagai referensi.
+- **PPR** umumnya merujuk pada jumlah pulse per revolution per channel;
+- **CPR** pada praktikum ini berarti jumlah **count hasil decoder** untuk satu putaran pada shaft yang digunakan sebagai referensi.
 
-Jika encoder menghasilkan 100 pulse/rev per channel dan decoder x4, secara teori hasil dapat 400 count/rev. Gearbox dapat mengubah count pada output shaft.
+Jika encoder menghasilkan 100 pulse/rev per channel dan decoder menggunakan x4, nilai teoritis dapat menjadi 400 count/rev. Gearbox dapat mengubah jumlah count bila referensi pengukuran berada pada output shaft.
 
-Karena definisi vendor tidak selalu sama, P10 mewajibkan pengukuran manual.
+Karena definisi vendor dapat berbeda, P10 mewajibkan verifikasi melalui pengukuran.
 
 ---
 
 ## 4. Kalibrasi CPR
-Prosedur konseptual:
+Langkah konseptual:
 
 1. catat count awal;
-2. putar shaft referensi sejumlah revolusi yang diketahui;
+2. putar shaft referensi sebanyak jumlah revolusi yang diketahui;
 3. catat count akhir;
 4. hitung `abs(delta_count)/revolutions`;
 5. ulangi beberapa kali;
-6. gunakan median/mean dan catat variasinya.
+6. gunakan nilai rata-rata atau median dan catat variasinya.
 
-Lebih dari satu revolusi biasanya mengurangi pengaruh error penempatan tanda mekanik.
+Menggunakan beberapa revolusi biasanya mengurangi pengaruh kesalahan penempatan tanda mekanik.
 
 Helper:
 
 ```matlab
 run('examples/cpr_calibration.m')
 ```
+
+Catat dengan jelas apakah CPR mengacu pada shaft motor, shaft encoder, atau output gearbox.
 
 ---
 
@@ -87,19 +89,19 @@ Untuk posisi unwrapped:
 position_deg = count / CPR * 360
 ```
 
-Jika count terus bertambah, posisi dapat menjadi lebih dari 360° atau kurang dari 0°. Ini **bukan error**; itu adalah posisi multi-turn.
+Jika count terus bertambah, posisi dapat lebih besar dari 360 derajat atau lebih kecil dari 0 derajat. Hal ini bukan kesalahan; nilai tersebut menunjukkan posisi multi-turn.
 
-Jika hanya perlu tampilan satu putaran:
+Jika hanya diperlukan tampilan satu putaran:
 
 ```matlab
 wrapped = mod(position_deg,360);
 ```
 
-P12 menggunakan posisi unwrapped sebagai baseline supaya tidak ada diskontinuitas 359° -> 0° dalam error controller.
+P12 menggunakan posisi unwrapped sebagai baseline agar error controller tidak mengalami diskontinuitas buatan pada batas 359 derajat ke 0 derajat.
 
 ---
 
-## 6. Kecepatan dari delta count
+## 6. Kecepatan dari perubahan count
 Untuk interval `dt`:
 
 ```text
@@ -107,7 +109,7 @@ delta_count = count[k]-count[k-1]
 rpm = delta_count/CPR * 60/dt
 ```
 
-Tanda RPM mengikuti tanda delta count.
+Tanda RPM mengikuti tanda `delta_count`.
 
 Contoh:
 
@@ -120,30 +122,30 @@ RPM = 30/600 * 60/0.05 = 60 RPM
 
 ---
 
-## 7. Resolusi RPM dan sample time
-Satu count dalam window menghasilkan perubahan RPM minimum kira-kira:
+## 7. Resolusi RPM dan interval sampling
+Satu count dalam satu interval pengukuran menghasilkan perubahan RPM minimum kira-kira:
 
 ```text
 DeltaRPM = 60 / (CPR * dt)
 ```
 
-Dengan CPR=600 dan dt=0.05 s:
+Dengan CPR=600 dan `dt=0.05 s`:
 
 ```text
 DeltaRPM = 2 RPM/count
 ```
 
-Jika sample window diperkecil menjadi 0.01 s:
+Jika interval diperkecil menjadi `0.01 s`:
 
 ```text
 DeltaRPM = 10 RPM/count
 ```
 
-Artinya sampling lebih cepat tidak otomatis memberi estimasi speed lebih halus. Ada tradeoff antara latency dan quantization.
+Artinya, sampling yang lebih cepat tidak otomatis menghasilkan estimasi RPM yang lebih halus. Terdapat kompromi antara keterlambatan pengukuran dan kuantisasi.
 
 ---
 
-## 8. Raw, moving average, dan LPF
+## 8. RPM mentah, moving average, dan LPF
 Firmware P10 menghasilkan:
 
 ```text
@@ -152,8 +154,8 @@ rpm_ma
 rpm_lpf
 ```
 
-### Raw
-Paling cepat tetapi terlihat bertingkat/noisy pada speed rendah.
+### RPM mentah
+Respons paling cepat, tetapi pada kecepatan rendah dapat terlihat bertingkat dan lebih mudah dipengaruhi kuantisasi.
 
 ### Moving average
 
@@ -161,23 +163,23 @@ Paling cepat tetapi terlihat bertingkat/noisy pada speed rendah.
 y[k] = mean(x[k-N+1 ... k])
 ```
 
-Mengurangi noise tetapi menambah delay dan memori.
+Mengurangi variasi data tetapi menambah keterlambatan dan membutuhkan buffer sampel.
 
-### First-order low-pass
+### Low-pass filter orde satu
 
 ```text
 y[k] = alpha*x[k] + (1-alpha)*y[k-1]
 ```
 
-- alpha besar -> lebih responsif;
-- alpha kecil -> lebih halus tetapi lebih lambat.
+- `alpha` besar: lebih responsif terhadap perubahan;
+- `alpha` kecil: lebih halus tetapi lebih lambat.
 
-Pada baseline firmware, LPF diterapkan setelah moving average.
+Pada firmware baseline, LPF diterapkan setelah moving average. Mahasiswa harus menyadari bahwa dua tahap filtering dapat menambah keterlambatan feedback.
 
 ---
 
 ## 9. Decoder lookup table
-Firmware menyimpan state sebelumnya dan state sekarang:
+Firmware menyimpan keadaan sebelumnya dan keadaan saat ini:
 
 ```text
 index = previous_state*4 + current_state
@@ -185,10 +187,10 @@ index = previous_state*4 + current_state
 
 Lookup table menghasilkan `-1`, `0`, atau `+1`.
 
-Keuntungan:
-- arah eksplisit;
-- transisi invalid dapat diabaikan;
-- mudah diuji dengan test vector.
+Keuntungan pendekatan ini:
+- arah perubahan count terlihat jelas;
+- transisi yang tidak valid dapat diabaikan;
+- decoder dapat diuji menggunakan test vector tanpa hardware.
 
 Gunakan:
 
@@ -196,12 +198,14 @@ Gunakan:
 python examples/quadrature_state_test.py
 ```
 
-untuk memahami transisi tanpa hardware.
+untuk mempelajari urutan transisi secara offline.
 
 ---
 
-## 10. Atomic read
-`encoderCount` diubah di interrupt. Saat loop utama membaca variabel multi-byte, firmware baseline memakai:
+## 10. Pembacaan atomik count
+`encoderCount` diubah di interrupt. Variabel `long` terdiri atas beberapa byte, sehingga loop utama perlu mengambil snapshot yang konsisten.
+
+Firmware baseline menggunakan:
 
 ```cpp
 noInterrupts();
@@ -209,37 +213,37 @@ long c=encoderCount;
 interrupts();
 ```
 
-Tujuannya mengambil snapshot count yang konsisten.
+Tujuannya bukan menghentikan interrupt dalam waktu lama, tetapi memastikan nilai count tidak berubah di tengah proses penyalinan.
 
 ---
 
-## 11. Telemetry protocol P10
-Firmware mengirim:
+## 11. Protokol telemetry P10
+Firmware mengirim header:
 
 ```text
 #PROTO,ENCODER_STREAM,1
 #ms,count,position_deg,rpm_raw,rpm_ma,rpm_lpf
 ```
 
-Baris data:
+Baris data numerik berisi enam kolom:
 
 ```text
 ms,count,position_deg,rpm_raw,rpm_ma,rpm_lpf
 ```
 
-MATLAB harus mengabaikan baris yang dimulai `#` dan hanya memproses data numerik dengan enam kolom.
+Program MATLAB harus mengabaikan baris yang diawali `#` dan hanya memproses data numerik dengan jumlah kolom yang benar.
 
 ---
 
 ## 12. MATLAB monitor
-`matlab_monitor_encoder.m` membaca serial dan memplot data encoder.
+`matlab_monitor_encoder.m` membaca telemetry serial, menyimpan data, dan membuat grafik.
 
-Yang harus diperiksa:
+Hal yang harus diperiksa:
 - timestamp meningkat;
-- count berubah;
-- degree konsisten dengan count;
-- RPM mempunyai tanda yang benar;
-- raw/MA/LPF menunjukkan tradeoff smoothing.
+- count berubah sesuai gerakan;
+- `position_deg` konsisten dengan count dan CPR;
+- RPM mempunyai tanda yang sesuai arah;
+- raw/MA/LPF menunjukkan perbedaan noise dan keterlambatan.
 
 Analisis offline:
 
@@ -249,39 +253,39 @@ run('examples/analyze_encoder_log.m')
 
 ---
 
-## 13. Validasi arah end-to-end
-Definisikan konvensi, misalnya:
+## 13. Validasi arah dari ujung ke ujung
+Definisikan satu konvensi arah, misalnya:
 
 ```text
-CW mekanik = count positif = position positif = RPM positif
-CCW mekanik = count negatif = position negatif = RPM negatif
+CW mekanik = count positif = posisi positif = RPM positif
+CCW mekanik = count negatif = posisi negatif = RPM negatif
 ```
 
-Konvensi boleh dibalik, tetapi harus **konsisten** pada:
+Konvensi boleh dibalik, tetapi harus konsisten pada:
 - encoder;
-- MATLAB plot;
-- P11 signed speed command;
-- P12 signed position target.
+- grafik MATLAB;
+- signed speed command pada P11;
+- target posisi bertanda pada P12.
 
-Jangan memperbaiki tanda hanya pada grafik bila controller menggunakan tanda yang berbeda.
+Jangan hanya membalik tanda pada grafik bila controller menggunakan konvensi yang berbeda.
 
 ---
 
-## 14. Error diagnosis
+## 14. Diagnosis kesalahan
 ### Count tidak berubah
-Periksa channel A/B, common reference, pull-up, dan apakah pin yang digunakan sesuai sketch.
+Periksa kanal A/B, ground bersama, pull-up, dan kesesuaian pin dengan sketch.
 
-### Count hanya satu arah
-Audit sequence quadrature dan state A/B.
+### Count hanya benar pada satu arah
+Audit urutan quadrature dan keadaan kanal A/B.
 
 ### Posisi salah skala
-CPR salah atau referensi shaft berbeda dari saat kalibrasi.
+CPR salah atau shaft referensi berbeda dari shaft yang digunakan saat kalibrasi.
 
-### RPM terlalu noisy
-Window terlalu pendek, CPR rendah, atau sinyal encoder buruk.
+### RPM terlalu berfluktuasi
+Interval pengukuran terlalu pendek, CPR rendah, atau kualitas sinyal encoder kurang baik.
 
 ### RPM selalu positif
-Tanda delta count hilang pada salah satu tahap.
+Tanda `delta_count` hilang pada salah satu tahap perhitungan atau pengolahan data.
 
 ### Posisi benar tetapi RPM salah
 Audit `lastCount`, `delta_count`, `dt`, dan CPR.
@@ -299,40 +303,40 @@ examples/analyze_encoder_log.m
 examples/quadrature_state_test.py
 ```
 
-Urutan:
+Urutan belajar:
 
 ```text
-quadrature theory
--> offline state test
--> manual CPR calibration
--> count/position validation
--> RPM raw
--> MA/LPF
--> MATLAB logging
--> sign audit
+teori quadrature
+-> pengujian state secara offline
+-> kalibrasi CPR
+-> validasi count dan posisi
+-> RPM mentah
+-> moving average dan LPF
+-> logging MATLAB
+-> audit tanda arah
 ```
 
 ---
 
-## 16. Deliverable data minimum
+## 16. Data minimum yang dikumpulkan
 Catat:
-- measured CPR;
+- CPR hasil pengukuran;
 - jumlah revolusi kalibrasi;
-- error/repeatability CPR;
-- sample interval;
-- posisi + dan -;
-- RPM + dan -;
-- raw vs MA vs LPF;
+- variasi hasil CPR;
+- interval sampling;
+- posisi positif dan negatif;
+- RPM positif dan negatif;
+- perbandingan raw, MA, dan LPF;
 - screenshot serial/MATLAB;
 - CSV log.
 
 ---
 
-## 17. Jembatan ke P11
-P11 tidak boleh dimulai sebelum P10 lulus tiga syarat:
+## 17. Gate menuju P11
+P11 tidak boleh dimulai sebelum P10 memenuhi tiga syarat utama:
 
 1. count bertanda benar;
 2. CPR telah diverifikasi;
-3. RPM positif dan negatif terbaca benar.
+3. RPM positif dan negatif terbaca dengan benar.
 
-Pada P11, `rpm_lpf` menjadi feedback untuk PID speed. Karena itu kesalahan P10 akan langsung masuk ke controller.
+Pada P11, `rpm_lpf` digunakan sebagai feedback PID kecepatan. Karena itu setiap kesalahan pada P10 akan langsung memengaruhi controller P11.
