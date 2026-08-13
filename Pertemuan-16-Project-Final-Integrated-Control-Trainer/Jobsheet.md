@@ -44,3 +44,7 @@
 
 ## Offline smoke test
 Jalankan `python examples/integration_simulator.py` untuk memverifikasi logika PID tiga mode (heater, motor speed, motor position) sebelum integrasi hardware.
+
+
+## Firmware referensi
+Build dan upload `examples/final_integrated_firmware` sebagai baseline integrasi sebelum mahasiswa mengembangkan fitur project sendiri.

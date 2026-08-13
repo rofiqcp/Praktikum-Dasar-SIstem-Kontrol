@@ -55,7 +55,7 @@ Target hardware utama adalah **Arduino Mega 2560 control trainer/shield** yang m
 | 13 | PlatformIO PID motor + Python Qt GUI | C++ + Python | TugasVideo |
 | 14 | PlatformIO PID pemanas air + SSR | C++ Arduino Mega | TugasVideo |
 | 15 | Node.js DAQ/dashboard serial | Node.js | TugasVideo |
-| 16 | **Project final integrated trainer** | Python smoke test + C++ + Python/Node | **Project** |
+| 16 | **Project final integrated trainer** | Integrated PlatformIO + Python smoke test + Node | **Project** |
 
 ## Quick Start
 

@@ -8,9 +8,9 @@
 
 ## Materi Inti
 
-Firmware Arduino Mega 2560 mengimplementasikan PID speed/position dengan pin materi: **D5 CW, D6 CCW, encoder D2/D3** dan saturation -255..255. Speed pipeline menyediakan raw sampling, moving average, LPF, dan speed per second. Saat berganti ke mode position, posisi dapat di-zero-kan.
+Firmware Arduino Mega 2560 mengimplementasikan PID speed/position dengan pin materi: **D5 CW, D6 CCW, encoder D2/D3** dan saturation -255..255. Speed pipeline menyediakan raw speed, moving average, LPF, dan speed per second. Saat berganti ke mode position, posisi otomatis di-zero-kan. Telemetry mengirim SP, position, raw/MA/LPF speed, feedback, error, P/I/D dan output.
 
-GUI Python/PyQt berkomunikasi serial, mengatur setpoint/Kp/Ki/Kd/alpha/sampling, menampilkan dua grafik, menyimpan CSV/PNG, dan dapat menghitung karakteristik respon sistem.
+GUI Python/PyQt berkomunikasi serial, mengatur mode, setpoint, Kp/Ki/Kd, alpha dan sampling; menampilkan dua grafik; menyimpan CSV, Excel dan PNG; serta menghitung karakteristik respon sistem.
 
 
 ## Program yang Wajib Dijalankan

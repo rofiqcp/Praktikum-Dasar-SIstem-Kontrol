@@ -12,6 +12,9 @@ Final project mengintegrasikan seluruh jalur semester: modeling â†’ eksperimen â
 
 
 ## Program yang Wajib Dijalankan
+- `examples/final_integrated_firmware/platformio.ini`
+- `examples/final_integrated_firmware/src/main.cpp`
+- `examples/integration_simulator.py`
 - `examples/integration_protocol.md`
 
 ## Alur Praktikum

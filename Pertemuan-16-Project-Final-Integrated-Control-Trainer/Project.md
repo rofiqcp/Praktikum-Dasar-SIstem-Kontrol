@@ -57,3 +57,7 @@ Host dapat memakai Python GUI atau Node.js DAQ. Mahasiswa wajib menunjukkan data
 
 ## Offline smoke test
 Jalankan `python examples/integration_simulator.py` untuk memverifikasi logika PID tiga mode (heater, motor speed, motor position) sebelum integrasi hardware.
+
+
+## Firmware referensi
+Build dan upload `examples/final_integrated_firmware` sebagai baseline integrasi sebelum mahasiswa mengembangkan fitur project sendiri.
