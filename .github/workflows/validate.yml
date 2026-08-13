@@ -10,11 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Structural and Python validation
+      - name: Structural, documentation, and Python validation
         run: python validate_repo.py
 
       - name: Install Python test dependency
@@ -25,12 +26,23 @@ jobs:
           cd shared/python
           python test_response_metrics.py
 
+      - name: P10 quadrature state test
+        run: python Pertemuan-10-MATLAB-Arduino-Baca-RPM-dan-Posisi/examples/quadrature_state_test.py
+
       - name: Node syntax
-        run: |
-          node --check Pertemuan-16-Responsi-P09-P15/examples/node_serial_logger/index.js
+        run: node --check Pertemuan-16-Responsi-P09-P15/examples/node_serial_logger/index.js
 
       - name: Install PlatformIO
         run: python -m pip install --disable-pip-version-check platformio
+
+      - name: Compile P10 Arduino encoder sketch
+        run: pio ci Pertemuan-10-MATLAB-Arduino-Baca-RPM-dan-Posisi/examples/arduino_encoder_stream/arduino_encoder_stream.ino --board megaatmega2560
+
+      - name: Compile P11 Arduino speed PID sketch
+        run: pio ci Pertemuan-11-MATLAB-Arduino-PID-Kecepatan/examples/arduino_speed_pid/arduino_speed_pid.ino --board megaatmega2560
+
+      - name: Compile P12 Arduino position PID sketch
+        run: pio ci Pertemuan-12-MATLAB-Arduino-PID-Posisi/examples/arduino_position_pid/arduino_position_pid.ino --board megaatmega2560
 
       - name: Build P13 Arduino Mega firmware
         run: pio run -d Pertemuan-13-PlatformIO-ADC-RPM-Posisi-dengan-AI/examples/mega_io_monitor
