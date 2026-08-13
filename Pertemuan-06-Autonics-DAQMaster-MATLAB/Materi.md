@@ -1,68 +1,119 @@
-# Pertemuan 6 — Autonics DAQMaster + Analisis MATLAB
+# Pertemuan 6 — DAQMaster + Analisis MATLAB/Python
 
-## 1. Tujuan
-Mengubah pengambilan data P5 yang manual menjadi logging digital melalui DAQMaster, lalu mengolah hasil CSV di MATLAB/Python.
+## Capaian
+Mahasiswa mampu memahami alur akuisisi data digital, mendokumentasikan konfigurasi komunikasi laboratorium, memeriksa kualitas CSV, mengimpor data ke MATLAB/Python, dan membandingkan logging digital dengan pencatatan manual P5.
 
-## 2. DAQMaster
-DAQMaster digunakan untuk:
-- scan/connect perangkat yang didukung;
-- monitor PV/SV;
-- parameter setting sesuai hak akses/perangkat;
-- graph;
-- data logging;
-- ekspor CSV.
+## Alur data
 
-Model/opsi komunikasi Autonics dapat berbeda. Ikuti manual unit aktual untuk address, baud, parity, dan wiring RS485.
+```text
+perangkat -> interface komunikasi -> DAQMaster -> CSV -> analisis
+```
 
-## 3. Workflow
-1. Pastikan Autonics bekerja standalone.
-2. Hubungkan converter RS485 yang benar.
-3. Set communication parameter perangkat.
-4. Buka DAQMaster.
-5. Add/scan device.
-6. Pastikan PV/SV masuk akal.
-7. Buat graph.
-8. Enable logging CSV.
-9. RUN eksperimen.
-10. STOP.
-11. Buka CSV.
-12. Import MATLAB.
+P6 menekankan bahwa banyak data belum tentu berarti data berkualitas.
 
-## 4. Kualitas data
+## Parameter yang dicatat
+- model perangkat;
+- ID/address;
+- baud rate;
+- parity dan stop bit;
+- interface/converter;
+- port komputer;
+- interval logging;
+- nama file raw.
+
+Gunakan konfigurasi yang telah ditentukan laboratorium dan dokumentasikan setting yang dipakai.
+
+## Workflow umum
+1. buka project DAQMaster yang sesuai;
+2. verifikasi nilai dan satuan yang tampil;
+3. tampilkan trend graph;
+4. aktifkan logging;
+5. simpan raw log;
+6. ekspor CSV;
+7. simpan screenshot konfigurasi;
+8. analisis copy data tanpa mengubah raw file.
+
+Nama menu dapat berbeda menurut versi DAQMaster.
+
+## Kualitas data
 Periksa:
 - timestamp monoton;
-- tidak ada nilai kosong aneh;
-- unit benar;
-- sampling interval;
-- SV berubah sesuai eksperimen.
+- duplicate timestamp;
+- missing sample;
+- kolom numerik;
+- satuan;
+- interval sampling;
+- perubahan parameter yang tidak terdokumentasi.
 
-## 5. Analisis MATLAB
-`examples/analyze_daqmaster.m` berusaha mendeteksi kolom waktu/PV/SV. Bila nama kolom export DAQMaster berbeda, ubah tiga mapping di bagian awal.
+## Statistik sampling
+Untuk timestamp `t[k]`, hitung:
 
-## 6. Perbandingan P5 vs P6
-Manual:
-- mudah tetapi resolusi rendah;
-- rawan salah tulis.
+`dt[k] = t[k]-t[k-1]`
 
-DAQ:
-- sampling konsisten;
-- data lebih banyak;
-- perlu konfigurasi komunikasi yang benar.
+Laporkan minimum, median, maksimum, dan jumlah sampel. Perbedaan interval yang besar dapat memengaruhi interpretasi peak dan settling time.
 
-## 7. Eksperimen
-Ulangi tiga hysteresis dan tuning PID dengan logging otomatis. Gunakan kondisi awal yang dikontrol.
+## Struktur folder data
+Gunakan pola:
 
-## Program referensi dan urutan belajar
-Topik inti pertemuan ini adalah **Autonics DAQMaster dan MATLAB**. Program yang harus dibuka dan dipahami:
+```text
+raw/        file asli
+processed/  data yang sudah dinormalisasi
+results/    grafik dan metrics
+```
+
+Raw data tidak diedit.
+
+## MATLAB
+
+```matlab
+analyze_daqmaster('hasil.csv')
+```
+
+Analisis mencakup import tabel, pemetaan kolom waktu/PV/SV, plot, statistik interval, dan response metrics.
+
+## Python alternatif
+
+```bash
+python examples/analyze_daqmaster.py hasil.csv
+```
+
+## Perbandingan run
+
+```matlab
+run('examples/compare_runs.m')
+```
+
+Setiap kurva harus memiliki label run dan metadata yang jelas.
+
+## P5 vs P6
+| Aspek | Manual | DAQ |
+|---|---|---|
+| interval | dipengaruhi operator | lebih konsisten |
+| jumlah sampel | sedikit | lebih banyak |
+| transcription error | lebih mungkin | lebih rendah |
+| timestamp | kasar | lebih detail |
+| setup komunikasi | tidak diperlukan | harus terdokumentasi |
+
+## Eksperimen wajib
+1. Analisis satu sample CSV repository.
+2. Analisis minimal satu CSV hasil laboratorium.
+3. Hitung statistik sampling.
+4. Buat grafik dan metrics.
+5. Bandingkan satu dataset P5 dan satu dataset P6 yang paling comparable.
+6. Tulis sumber ketidakpastian pada kedua metode.
+
+## Troubleshooting
+- File tidak terbaca: periksa delimiter dan header.
+- Nama kolom berbeda: buat mapping eksplisit.
+- Timestamp datetime: ubah menjadi elapsed seconds.
+- Missing data: hitung dan dokumentasikan sebelum memilih metode cleaning.
+- Data tidak comparable: audit metadata dan kondisi awal.
+
+## File wajib
 - `examples/analyze_daqmaster.m`
 - `examples/analyze_daqmaster.py`
+- `examples/compare_runs.m`
+- `sample_data/daq_export.csv`
 
-Urutan kerja yang direkomendasikan: pahami persamaan/diagram → jalankan contoh default → ubah satu parameter → catat output → jelaskan sebab perubahan → simpan bukti.
-
-## Hasil yang diharapkan
-CSV DAQMaster dapat dibaca dan menghasilkan grafik/metrik yang bisa dibandingkan dengan P5.
-
-## Validasi dan troubleshooting
-Jika kolom tidak terbaca, ekspor CSV sederhana dan identifikasi nama kolom time/PV/SV. Samakan baud/parity/address dengan controller.
-
-Setiap hasil eksperimen harus mencatat konfigurasi, satuan, sample time/interval akuisisi, dan kondisi awal. Hasil yang “terlihat bagus” tetapi tidak dapat direproduksi belum dianggap valid.
+## Jembatan ke P7
+P6 menyelesaikan tahap data acquisition dari perangkat laboratorium. P7 memperkenalkan Arduino Mega sebagai perangkat I/O yang diakses langsung dari MATLAB sehingga mahasiswa memahami alur host–hardware sebelum masuk praktikum closed-loop berikutnya.
